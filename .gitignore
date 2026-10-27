@@ -5,3 +5,5 @@
 # source materials, not part of the site
 *.drawio
 *.docx
+# archived mobile reading view, kept locally only
+mobile/
