@@ -81,7 +81,6 @@ const IDEA_ROWS = {
       ['Банк идей', 'https://dev-api-aicb.lab.vebtech.by/database', 'Vebtech'],
       ['Канал iDEA', 'https://myteam.mail.ru/profile/VTiDEA', 'VK WorkSpace'],
       ['OKR 2026', 'https://wiki.vebtech.by/spaces/CI/pages/302256305/OKR+2026', 'Wiki'],
-      ['AI-агент Discovery', 'https://drive.google.com/file/d/147_YggtbytTV4tckBK9RHhSxCzI5b4rM/view', 'Google Drive'],
     ] },
   ],
   process: [
@@ -116,7 +115,7 @@ const IDEA_ROWS = {
 const DISCOVERY_ROWS = {
   links: [
     { title: 'Инструменты', items: [
-      ['AI-агент Discovery', 'https://drive.google.com/file/d/147_YggtbytTV4tckBK9RHhSxCzI5b4rM/view', 'Google Drive'],
+      ['AI-агент Discovery', 'https://youtu.be/ea1g3EHpqh0', 'YouTube'],
       ['Продуктовый подход', 'https://wiki.vebtech.by/spaces/Learn/pages/232653829/%D0%9F%D1%80%D0%BE%D0%B4%D1%83%D0%BA%D1%82%D0%BE%D0%B2%D1%8B%D0%B9+%D0%BF%D0%BE%D0%B4%D1%85%D0%BE%D0%B4', 'Wiki'],
     ] },
   ],
@@ -378,7 +377,7 @@ window.DECK = {
             before: ['Исполнители задач по ТЗ', 'Идеи подавали единицы'],
             after: { title: '', items: ['Трансформация модели поведения', 'Внутреннее предпринимательство', 'Развитие навыков ключевых сотрудников', 'Мотивация лидеров изменений', 'Популяризация: iDEA и Банк идей'] },
             numbers: [
-              { value: '38 → 45', label: 'Авторов идей в год', note: '+7 (+18%) · 2025 → 2026' },
+              { value: '38 → 45', label: 'Авторов идей в год', period: '2025 → 2026', note: '+7 (+18%)' },
               { value: '108 → ~140', label: 'Участников OKR', period: '2025 → 2026', note: '36% → 41% сотрудников' },
               { value: '30+', label: 'Лидеров изменений', note: '10% сотрудников' },
             ],
@@ -498,7 +497,6 @@ window.DECK = {
             { title: 'Демо', items: [
               ['Дизайн-система Solar 2.0', 'https://youtu.be/vW7hiAKra20', 'YouTube'],
               ['Проект WIN · I квартал 2026', 'https://youtu.be/B6fJ285CyjA', 'YouTube'],
-              ['Банк идей', 'https://youtu.be/ea1g3EHpqh0', 'YouTube'],
             ] },
           ],
         },
