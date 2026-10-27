@@ -443,9 +443,10 @@ function goStage(i) {
 
 document.addEventListener('click', (e) => {
   if (state.modal && e.target === $('more')) return setModal(false); // click on the backdrop
-  const el = e.target.closest('[data-step],[data-cover],[data-stage],[data-role],[data-lens],[data-more],[data-close]');
+  const el = e.target.closest('[data-step],[data-cover],[data-stage],[data-role],[data-lens],[data-more],[data-close],[data-fullscreen]');
   if (!el) return;
   el.blur(); // keep focus off buttons so clicker Space/Enter steps the deck instead of re-clicking
+  if ('fullscreen' in el.dataset) return toggleFullscreen();
   if ('more' in el.dataset) return setModal(true);
   if ('close' in el.dataset) return setModal(false);
   if (el.dataset.step) return step(+el.dataset.step);
@@ -490,6 +491,7 @@ const PREV = ['ArrowLeft', 'ArrowUp', 'PageUp', 'Backspace'];
 document.addEventListener('keydown', (e) => {
   if (e.metaKey || e.ctrlKey || e.altKey) return;
   if (e.key === 'Escape' && state.modal) return setModal(false);
+  if (e.code === 'KeyF' && !e.repeat) return toggleFullscreen(); // by key position: works in the Russian layout too (А)
   if (e.target.closest?.('a') && e.key === 'Enter') return; // Enter on a focused link opens it
   const delta = NEXT.includes(e.key) ? 1 : PREV.includes(e.key) ? -1 : 0;
   if (!delta) return;
@@ -539,6 +541,13 @@ function typeset(node) {
 typeset($('slide'));
 new MutationObserver((list) => list.forEach((m) => (m.type === 'characterData' ? typeset(m.target) : m.addedNodes.forEach(typeset))))
   .observe($('slide'), { childList: true, subtree: true, characterData: true });
+
+const toggleFullscreen = () => (document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen?.());
+
+// Fullscreen button on the cover: label follows the state; hidden where the API is missing (iPhone Safari)
+const fsBtn = document.querySelector('[data-fullscreen]');
+fsBtn.hidden = !document.fullscreenEnabled;
+addEventListener('fullscreenchange', () => { fsBtn.querySelector('span').textContent = document.fullscreenElement ? 'Выйти из полноэкранного режима' : 'На весь экран'; });
 
 addEventListener('resize', fit);
 fit();
