@@ -153,6 +153,7 @@ const DEV_ROWS = {
   analysis: {
     links: [
       { title: 'AI-ассистенты vebtech', items: [
+        ['AI-Native SDLC', 'https://ai-sdlc.lab.vebtech.by/login', 'Vebtech'],
         ['Требования проекта БВ Страхование', 'https://assistants-platform-dev.lab.vebtech.by/chat/13', 'Vebtech AI'],
         ['BPMN-диаграммы', 'https://assistants-platform-dev.lab.vebtech.by/chat/17', 'Vebtech AI'],
         ['UML-диаграммы', 'https://assistants-platform-dev.lab.vebtech.by/chat/9', 'Vebtech AI'],
@@ -196,6 +197,7 @@ const DEV_ROWS = {
     tech: {
       was: ['Confluence, Jira', 'MS Word, Excel, PowerPoint', 'Visio, Draw.io', 'Postman', 'Balsamiq, Figma, Axure'],
       added: [
+        ['Подход разработки', 'AI-Native SDLC'],
         ['Требования и анализ', 'RAG-бот; внутренние ассистенты vebtech по требованиям, обогащению БТ, ревью, BPMN и UML; ChatGPT, Claude, Perplexity, Copilot.'],
         ['Встречи', 'Whisper, Notta, Yandex SpeechKit, Otter.ai.'],
         ['Схемы, данные и API', 'PlantUML, Mermaid, Postman AI, DBeaver AI / Text-to-SQL, Python с Pandas и обработкой JSON; автоматизированная подготовка Swagger / OpenAPI и JSON/XML-схем.'],

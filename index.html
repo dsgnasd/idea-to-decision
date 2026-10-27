@@ -322,12 +322,13 @@
     .mxr.two ul { margin: 0; padding-left: 26px; display: grid; row-gap: 8px; }
     .mxr.two li::marker { color: rgba(255, 255, 255, .5); }
     /* Next to a grouped list: same size and rhythm as its rows */
-    .mxr.two.tech:not(.short) ul { font-size: 19px; line-height: 1.35; row-gap: 12px; padding-left: 22px; }
+    .mxr.two.tech:not(.short) ul { font-size: 18px; line-height: 1.35; row-gap: 12px; padding-left: 22px; }
     .mxr.two p { margin: 0; } .mxr.two p + p { margin-top: 6px; }
     .mxr.two .logos { position: static; display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
     /* Grouped tools: label column + text column, groups separated by a hairline */
-    .mxr.two dl { display: grid; grid-template-columns: 250px 1fr; column-gap: 20px; margin: 0; font-size: 19px; }
-    .mxr.two dt, .mxr.two dd { margin: 0; padding: 7px 0; line-height: 1.35; }
+    .mxr.two dl { display: grid; grid-template-columns: 250px 1fr; column-gap: 20px; margin: 0; font-size: 18px; }
+    .mxr.two.tech:not(.short) .logos img { width: 38px; height: 38px; padding: 7px; border-radius: 10px; }
+    .mxr.two dt, .mxr.two dd { margin: 0; padding: 5px 0; line-height: 1.32; }
     .mxr.two dt { font-weight: 700; color: #fff; }
     .mxr.two dd { color: rgba(255, 255, 255, .88); }
     .mxr.two :is(dt, dd):nth-child(n + 3) { border-top: 1px solid rgba(255, 255, 255, .14); }
