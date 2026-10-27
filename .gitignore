@@ -1,0 +1,7 @@
+# local tooling
+.vercel
+.claude
+.DS_Store
+# source materials, not part of the site
+*.drawio
+*.docx

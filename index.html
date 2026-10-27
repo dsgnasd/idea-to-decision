@@ -1,0 +1,479 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>От идеи к решению</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="assets/favicon-32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <link rel="preload" href="assets/fonts/Manrope-Variable.woff2" as="font" type="font/woff2" crossorigin>
+  <style>
+    /* Local font: the deck works offline (projector without internet) */
+    @font-face { font-family: 'Manrope'; src: url('assets/fonts/Manrope-Variable.woff2') format('woff2'); font-weight: 200 800; font-style: normal; font-display: swap; }
+    :root {
+      --ink: #16233e;
+      --ink-card: #17233e;
+      --muted: #596b91;
+      --label: #54688f;
+      --accent: #2563eb;
+      --canvas: #f5f7fc;
+      --text: #171717;
+      --blue-grad: linear-gradient(134deg, #316ef5 0%, #244cd8 83.333%);
+      --card-grad: linear-gradient(to right, #fff, #f0f4ff);
+      --card-shadow: 0 8px 10px rgba(102, 125, 183, .12);
+      --blue-shadow: 0 8px 12px rgba(37, 99, 235, .2);
+      --ease: cubic-bezier(.22, 1, .36, 1);
+    }
+    * { box-sizing: border-box; margin: 0; }
+    html, body { height: 100%; background: #fff; overflow: hidden; }
+    body { font-family: 'Manrope', system-ui, sans-serif; line-height: 1.4; color: var(--ink); }
+    button { font: inherit; color: inherit; border: 0; background: none; cursor: pointer; }
+
+    /* 1920×1080 artboard, scaled to fit by app.js */
+    .slide { position: absolute; width: 1920px; height: 1080px; transform-origin: 0 0; }
+
+    .logo { position: absolute; left: 80px; top: 36px; display: block; }
+    .logo img { display: block; }
+
+    /* Cover (title slide) */
+    .cover { position: absolute; inset: 0; background: #fff; }
+    .cover-hex { position: absolute; inset: 0; width: 1920px; height: 1080px; pointer-events: none; }
+    .cover-logo { position: absolute; left: 96px; top: 72px; }
+    .cover-main { position: absolute; left: 96px; top: 200px; width: 1200px; }
+    .cover-title { font-size: 68px; line-height: 1.08; font-weight: 700; letter-spacing: -.02em; color: var(--ink); text-wrap: balance; }
+    .cover-lead { margin-top: 28px; width: 1000px; font-size: 30px; line-height: 1.4; font-weight: 500; color: var(--muted); }
+    .cover-qr { position: absolute; right: 96px; top: 56px; display: block; padding: 12px; } /* quiet zone around the code */
+    .cover-qr img { width: 132px; height: 132px; display: block; }
+    /* Cover flows: two schemes side by side, grey linear «Было» and blue cycle «Стало» */
+    .cover-flows { position: absolute; left: 96px; top: 520px; width: 1728px; display: grid; grid-template-columns: 1fr 1.35fr; gap: 24px; }
+    .flow { margin: 0; padding: 24px 28px 36px; border-radius: 24px; }
+    .flow figcaption { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; font-size: 21px; font-weight: 600; }
+    .flow-tag { padding: 5px 10px; border-radius: 8px; font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+    .flow-ai { display: inline-flex; align-items: center; gap: 8px; margin-left: auto; color: #fff; } /* same type as the caption */
+    .flow-ai img { width: 20px; height: 20px; }
+    .flow-steps { position: relative; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 18px; }
+    .flow-steps img { width: 18px; height: auto; flex: none; }
+    .chip { padding: 10px 18px; border-radius: 999px; white-space: nowrap; line-height: 1.2; }
+    .flow.was { background: #f3f5f9; color: var(--muted); }
+    .flow.was .flow-tag { background: rgba(43, 58, 90, .08); color: var(--label); }
+    .flow.was .chip { color: var(--muted); box-shadow: inset 0 0 0 1px rgba(43, 58, 90, .16); }
+    .flow.was .flow-steps img { filter: grayscale(1); opacity: .45; }
+    .flow.now { background: var(--blue-grad); box-shadow: var(--blue-shadow); color: #fff; }
+    .flow.now .flow-tag { background: rgba(255, 255, 255, .18); color: #fff; }
+    .flow.now .chip { background: #fff; color: var(--ink-card); font-weight: 600; box-shadow: 0 4px 12px rgba(10, 30, 90, .2); }
+    .flow.now .flow-steps img { filter: brightness(0) invert(1); opacity: .85; }
+    .flow.now .loop-line { stroke: rgba(255, 255, 255, .85); }
+    .cover-areas-label { position: absolute; left: 96px; top: 716px; font-size: 22px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--label); }
+    .cover-areas { position: absolute; left: 96px; top: 768px; width: 1728px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .area { height: 176px; padding: 24px 24px 22px; border-radius: 22px; border: 1.5px solid rgba(255, 255, 255, .95); background: var(--card-grad); box-shadow: var(--card-shadow); display: flex; flex-direction: column; }
+    .area-head { display: flex; align-items: center; gap: 14px; margin-bottom: 12px; }
+    .area-icon { display: grid; place-items: center; flex: none; width: 48px; height: 48px; border-radius: 14px; background: var(--blue-grad); box-shadow: var(--blue-shadow); }
+    .area-icon svg { width: 26px; height: 26px; fill: none; stroke: #fff; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .area h2 { font-size: 28px; line-height: 1.2; font-weight: 700; color: var(--ink-card); }
+    .area-sub { font-size: 22px; line-height: 1.35; font-weight: 600; color: var(--ink-card); text-wrap: balance; }
+    .area-meta { margin-top: auto; font-size: 18px; line-height: 1.4; color: var(--muted); text-wrap: balance; }
+    .cover-hint { position: absolute; left: 96px; right: 96px; bottom: 32px; padding-top: 20px; border-top: 1px solid #e3e9f6; display: flex; align-items: center; gap: 8px; font-size: 18px; color: var(--muted); }
+    .cover-hint kbd { min-width: 32px; padding: 4px 10px; border-radius: 8px; background: var(--canvas); border: 1px solid #dfe6f5; box-shadow: 0 1px 0 #dfe6f5; font: 600 15px/1.2 'Manrope', sans-serif; color: var(--ink); text-align: center; }
+    .cover-hint .sep { width: 1px; height: 18px; margin: 0 12px; background: #d3dbec; }
+
+    /* Active state = gradient layer in ::before, so it can cross-fade (gradients don't transition) */
+    .pill { position: relative; isolation: isolate; padding: 11px 20px; border-radius: 999px; background: var(--canvas); color: var(--text); font-weight: 500; white-space: nowrap; transition: background .25s, color .35s, box-shadow .35s, transform .2s var(--ease); }
+    .pill::before, .role::before { content: ''; position: absolute; inset: 0; z-index: -1; border-radius: inherit; background: var(--blue-grad); opacity: 0; transition: opacity .4s var(--ease); }
+    .pill:hover { background: #e6ecfa; }
+    .pill:active { transform: scale(.96); }
+    .pill[aria-current="true"], .pill[aria-selected="true"] { color: #fff; box-shadow: var(--blue-shadow); }
+    .pill[aria-current="true"]::before, .pill[aria-selected="true"]::before { opacity: 1; }
+
+    .stepper { position: absolute; top: 32px; left: 50%; translate: -50% 0; display: flex; align-items: center; gap: 17px; font-size: 18px; }
+    .stepper img { width: 20px; height: auto; }
+    /* Return loop under the cycle stages: from the last pill back to the first, arrowhead up */
+    .loop { position: relative; display: flex; align-items: center; gap: 17px; }
+    .loop-line { position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none; fill: none; stroke: #7FA0EC; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    /* Cycle progress: hex slot ahead, green check once passed */
+    .loop .pill { display: inline-flex; align-items: center; gap: 8px; }
+    .st { position: relative; width: 20px; height: 20px; flex: none; }
+    .st svg { position: absolute; inset: 0; width: 20px; height: 20px; transition: opacity .3s, transform .3s var(--ease); }
+    .st-hex { fill: #C9D2E3; padding: 1px; }
+    .pill[aria-current="true"] .st-hex { fill: rgba(255, 255, 255, .9); }
+    .st-done { opacity: 0; transform: scale(.6); }
+    .st-done circle { fill: #C9F5E0; } .st-done path { fill: none; stroke: #0E7A55; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .pill[data-done] { background: #fff; box-shadow: inset 0 0 0 1.5px #A8EFCF; }
+    .pill[data-done] .st-hex { opacity: 0; }
+    .pill[data-done] .st-done { opacity: 1; transform: none; }
+    /* Outside the cycle: white pill with an accent outline and a chart icon */
+    .pill.apart { display: inline-flex; align-items: center; gap: 8px; background: #fff; box-shadow: inset 0 0 0 2.5px #34D1BF; font-weight: 700; }
+    .pill.apart:hover { background: #effcfa; }
+    .pill.apart svg { width: 20px; height: 20px; fill: none; stroke: #1FB5A3; stroke-width: 2.6; stroke-linecap: round; }
+    .pill.apart[aria-current="true"] { box-shadow: var(--blue-shadow); }
+    .pill.apart[aria-current="true"] svg { stroke: #fff; }
+    .stepper-sep { width: 1px; height: 28px; margin: 0 12px; background: rgba(43, 58, 90, .2); }
+
+    .step-nav { position: absolute; top: 32px; right: 80px; display: flex; gap: 8px; }
+    .step-btn { display: grid; place-items: center; width: 47px; height: 47px; padding: 0; }
+    .step-btn svg { width: 22px; height: 22px; fill: none; stroke: var(--text); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .step-btn-sm { width: 40px; height: 40px; margin-left: 4px; }
+    .step-btn-sm svg { width: 20px; height: 20px; }
+    .step-restart { display: inline-flex; align-items: center; gap: 8px; height: 47px; font-size: 18px; }
+    .step-restart[hidden], .step-btn[hidden] { display: none; }
+    .step-restart svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* Light panel: stage overview */
+    .overview { position: absolute; left: 80px; top: 111px; width: 1760px; height: 368px; padding: 20px 24px 24px; border-radius: 28px; border: 1px solid rgba(255, 255, 255, .85); background: linear-gradient(to right, #edf2ff, #dce5fc); }
+    .overview-head { display: flex; justify-content: space-between; align-items: center; height: 56px; margin-bottom: 12px; padding: 0 2px 0 16px; }
+    h1, h2, h3 { font-size: 40px; font-weight: 600; }
+    h1, h2 { font-size: 34px; } /* stage title and panel title — one level */
+    h3 { font-size: 28px; display: flex; align-items: flex-end; } /* sits on the line above its cards */
+    .insight.problem { gap: 12px; font-size: 22px; font-weight: 400; color: var(--muted); }
+    .insight.problem b { font-weight: 400; color: inherit; } /* «было» — archive, not an accent */
+    .insight .problem-mark { flex: none; width: 26px; height: 26px; fill: none; stroke: var(--muted); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .then-arrow { flex: none; }
+    .detail-value .kpi { font-size: 34px; font-weight: 700; letter-spacing: -.02em; font-variant-numeric: tabular-nums; color: #34D1BF; }
+    .detail-value .kpi + span { font-size: 22px; font-weight: 500; color: rgba(255, 255, 255, .85); }
+    .detail-value .effect { max-width: 760px; font-size: 20px; line-height: 1.25; font-weight: 500; white-space: normal; text-align: right; color: rgba(255, 255, 255, .9); }
+    .detail-head h2 { flex: none; white-space: nowrap; }
+    .detail-value > span { white-space: normal; text-align: right; text-wrap: balance; }
+    .detail-value span + .kpi { padding-left: 18px; border-left: 1px solid rgba(255, 255, 255, .2); font-size: 26px; }
+    .detail-value { margin-left: auto; display: flex; align-items: center; gap: 14px; font-size: 24px; line-height: 1.12; font-weight: 700; color: #fff; white-space: nowrap; }
+    .detail-value:empty { display: none; }
+    .detail-value b { font-weight: 700; color: #34D1BF; }
+    .insight { display: flex; align-items: center; gap: 14px; font-size: 26px; line-height: 1.2; font-weight: 700; color: var(--ink); white-space: nowrap; }
+    .insight svg { flex: none; width: 20px; height: 22px; fill: var(--accent); }
+    .insight b { font-weight: 700; color: var(--accent); }
+
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .role { position: relative; isolation: isolate; display: flex; justify-content: space-between; align-items: center; height: 120px; padding-left: 24px; border-radius: 22px; border: 1.5px solid rgba(255, 255, 255, .95); background: var(--card-grad); box-shadow: var(--card-shadow); text-align: left; transition: transform .35s var(--ease), box-shadow .35s var(--ease), border-color .35s; }
+    .role::before { inset: -1.5px; }
+    .role:hover { transform: translateY(-3px); box-shadow: 0 14px 24px rgba(102, 125, 183, .2); }
+    .role:active { transform: scale(.985); }
+    .role[aria-selected="true"] { border-color: transparent; box-shadow: var(--blue-shadow); }
+    .role[aria-selected="true"]::before { opacity: 1; }
+    .role img { width: 160px; height: 120px; object-fit: cover; flex: none; transition: transform .6s var(--ease); }
+    .role:hover img { transform: translate(-4px, -3px) scale(1.04); }
+    .role-text { flex: 1; min-width: 0; padding-right: 16px; display: flex; flex-direction: column; gap: 4px; }
+    .grid.wide { grid-template-columns: repeat(2, 1fr); }
+    .grid.cols4 { grid-template-columns: repeat(4, 1fr); }
+    .grid.cols4 .role img { width: 120px; height: 90px; }
+    .role-title { font-size: 24px; line-height: 1.25; font-weight: 600; color: #2b3a5a; transition: color .35s; } /* one size on every stage */
+    .role-caption { font-size: 18px; line-height: 1.35; color: var(--muted); transition: color .35s; }
+    /* Cycle: 2×2 clockwise (1 → 2 → 3 → 4 → 1) with arrow badges in the gaps */
+    .grid.cycle { position: relative; }
+    .grid.cycle > .role:nth-child(3) { grid-column: 2; grid-row: 2; }
+    .grid.cycle > .role:nth-child(4) { grid-column: 1; grid-row: 2; }
+    .cyc { position: absolute; z-index: 2; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: #fff; box-shadow: 0 4px 12px rgba(37, 99, 235, .25); transform: translate(-50%, -50%); pointer-events: none; }
+    .cyc img { width: 18px; }
+    .cyc-1 { left: 50%; top: 60px; }
+    .cyc-2 { left: 75%; top: 50%; } .cyc-2 img { rotate: 90deg; }
+    .cyc-3 { left: 50%; top: calc(100% - 60px); } .cyc-3 img { rotate: 180deg; }
+    .cyc-4 { left: 25%; top: 50%; } .cyc-4 img { rotate: -90deg; }
+    .metric { font-variant-numeric: tabular-nums; }
+    .role[aria-selected="true"] :is(.role-title, .role-caption) { color: #fff; }
+
+    /* Dark panel: selected role detail */
+    .detail { position: absolute; left: 80px; top: 511px; width: 1760px; height: 497px; padding: 20px 24px; border-radius: 24px; background: var(--ink); color: #fff; }
+    .detail-head { display: flex; align-items: center; gap: 32px; height: 56px; padding-left: 16px; }
+    .tabs { display: flex; gap: 8px; font-size: 16px; }
+    .tabs .pill::before { background: var(--accent); }
+    .tabs .pill[aria-selected="true"] { box-shadow: none; }
+    .lead { width: 932px; min-height: 68px; margin: 18px 0 21px 17px; font-size: 24px; }
+    .labels { height: 56px; margin-bottom: 13px; }
+    .labels h3 { padding-left: 16px; }
+    .labels h3:last-child { grid-column: 2 / 4; }
+    .shift { height: 192px; padding: 16px; border-radius: 22px; display: flex; flex-direction: column; gap: 4px; background: var(--blue-grad); box-shadow: var(--blue-shadow); }
+    .shift.before { background: var(--card-grad); border: 1.5px solid rgba(255, 255, 255, .95); box-shadow: var(--card-shadow); }
+    .shift-label { font-size: 17px; font-weight: 700; line-height: 1.35; }
+    .shift-label + .shift-title { margin-top: 8px; } /* label → title 12px with the 4px gap */
+    .shift-title + .shift-text { margin-top: 4px; }
+    .shift-title { font-size: 24px; font-weight: 700; }
+    .shift-text { font-size: 20px; }
+    .before .shift-label { color: var(--label); }
+    .before .shift-title { color: var(--ink-card); }
+    .before .shift-text { color: var(--muted); }
+
+    /* Pairs: «Было → Стало», cards take the place of an empty lead */
+    .is-pairs .labels, .is-pairs #shifts { grid-template-columns: 1fr 72px 1fr; }
+    .is-pairs .labels h3:last-child { grid-column: 3; }
+    .is-pairs .lead:empty { display: none; }
+    .is-pairs .lead:empty + .labels { margin-top: 24px; }
+    .is-pairs .shift { height: 296px; padding: 28px; gap: 8px; }
+    .is-pairs .lead:not(:empty) ~ #shifts .shift { height: 192px; padding: 16px; }
+    .is-pairs .shift-text { margin-top: auto; font-size: 30px; line-height: 1.3; font-weight: 500; text-wrap: pretty; }
+    /* Full three-card layout without a lead: same tall cards, title and text at the bottom */
+    .no-lead:not(.is-pairs) .lead { display: none; }
+    .no-lead:not(.is-pairs) .labels { margin-top: 24px; }
+    .no-lead:not(.is-pairs) .shift { height: 296px; padding: 22px; gap: 8px; }
+    .no-lead:not(.is-pairs) .shift-title { margin-top: 16px; font-size: 24px; line-height: 1.25; }
+    .no-lead:not(.is-pairs) .shift-text { font-size: 19px; line-height: 1.4; }
+    /* Facts inside a card: plain points and «what — value» rows */
+    .facts { margin: auto 0 0; padding-left: 26px; display: flex; flex-direction: column; gap: 10px; font-size: 24px; line-height: 1.35; font-weight: 500; }
+    .facts b { font-weight: 700; white-space: nowrap; }
+    /* Pair cards with titles: title + text sit together at the bottom */
+    .is-pairs .shift-title { margin-top: auto; font-size: 26px; line-height: 1.25; }
+    /* Artifacts tab: link columns */
+    /* Final slide (Результаты): overview takes the whole slide, two blocks side by side */
+    #deck.is-final .detail { display: none; }
+    .is-final .overview { height: 897px; }
+    .final-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; height: 100%; }
+    .final-card { display: flex; flex-direction: column; padding: 36px 40px; border-radius: 26px; background: #fff; border: 1.5px solid rgba(255, 255, 255, .95); box-shadow: var(--card-shadow); color: var(--ink-card); }
+    .final-head { display: flex; align-items: center; gap: 18px; margin-bottom: 12px; }
+    .final-pic { flex: none; display: grid; place-items: center; overflow: hidden; }
+    .final-pic { width: 180px; height: 180px; margin: -20px -8px -20px 0; }
+    .final-pic img { width: 100%; height: 100%; object-fit: contain; }
+    /* Missing image: dashed square with the expected file name */
+    .ph-slot { border: 1.5px dashed rgba(59, 121, 255, .45); border-radius: 16px; background: rgba(230, 238, 255, .5); padding: 6px; font-size: 11px; line-height: 1.2; text-align: center; color: var(--label); word-break: break-all; }
+    .final-head h2 { font-size: 34px; font-weight: 700; }
+    .final-card ul { flex: 1; display: flex; flex-direction: column; margin: 0; padding: 0; list-style: none; }
+    .final-card li { flex: 1; display: flex; align-items: center; gap: 28px; padding: 20px 0; border-top: 1px solid rgba(43, 58, 90, .1); font-size: 24px; line-height: 1.4; color: var(--muted); }
+    .final-card li p { flex: 1; margin: 0; text-wrap: pretty; }
+    .final-card li b { display: block; margin-bottom: 8px; font-size: 28px; line-height: 1.25; font-weight: 700; color: var(--ink); }
+    /* «Показать все» button in the process table head and its modal */
+    /* «Показать все»: a quiet link in the column-label row, same size and caps as the labels */
+    .more-btn { display: inline-flex; align-items: center; gap: 6px; padding: 0; border: 0; background: none; color: rgba(255, 255, 255, .85); font: 700 15px/1.2 inherit; letter-spacing: .1em; text-transform: uppercase; cursor: pointer; transition: color .2s; }
+    .more-btn::after { content: '→'; letter-spacing: 0; }
+    .more-btn:hover { color: #fff; }
+    .modal { position: absolute; inset: 0; z-index: 20; display: grid; place-items: center; background: rgba(22, 35, 62, .32); backdrop-filter: blur(8px); }
+    .modal[hidden] { display: none; }
+    /* Light, minimal: one column grid for both lists, hairlines between rows, no fills */
+    .modal-card { width: 1800px; max-height: 1040px; overflow: auto; padding: 36px 48px 40px; border-radius: 28px; background: #fff; color: var(--ink-card); box-shadow: 0 30px 80px rgba(22, 35, 62, .25); }
+    .modal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+    .modal-head h2 { font-size: 36px; font-weight: 700; color: var(--ink); }
+    .modal-close { display: grid; place-items: center; width: 48px; height: 48px; padding: 0; }
+    .modal-close svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; }
+    .modal-body h3 { margin: 22px 0 4px; font-size: 22px; font-weight: 700; color: var(--brand, #3B79FF); }
+    .all-row { display: grid; grid-template-columns: 250px 1fr 1.45fr 1fr; column-gap: 32px; padding: 13px 0; border-top: 1px solid #E4E9F2; font-size: 19px; line-height: 1.38; }
+    .all-row b { font-weight: 700; color: var(--ink); }
+    .all-row .was { color: var(--muted); }
+    .all-row .now { color: var(--ink-card); font-weight: 500; }
+    .all-row .now.wide { grid-column: span 2; }
+    .all-row .value { color: #2F62E8; }
+    .all-head { padding: 0 0 10px; border-top: 0; border-bottom: 1px solid #E4E9F2; font-size: 14px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--label); }
+    .all-head + h3 { margin-top: 16px; }
+    .is-links #lead, .is-links .labels { display: none; }
+    .is-links #shifts { grid-template-columns: 1fr 2fr 1fr 1fr; gap: 16px; margin-top: 24px; align-items: start; }
+    .links-group h4 { margin: 0 0 12px 4px; font-size: 22px; font-weight: 600; }
+    .links-group > div { display: grid; gap: 8px; }
+    .links-group.two > div { grid-template-columns: 1fr 1fr; }
+    .links-group.wide > div { grid-template-columns: repeat(auto-fill, minmax(420px, 1fr)); }
+    .link { display: flex; align-items: center; gap: 10px; min-height: 64px; padding: 10px 16px; border-radius: 16px; background: rgba(255, 255, 255, .07); border: 1px solid rgba(255, 255, 255, .12); color: #fff; text-decoration: none; transition: background .2s, border-color .2s; }
+    .link:hover, .link:focus-visible { background: var(--blue-grad); border-color: transparent; }
+    .link span { flex: 1; min-width: 0; font-size: 19px; font-weight: 600; line-height: 1.25; }
+    .link small { display: block; margin-top: 2px; font-size: 14px; font-weight: 400; color: rgba(255, 255, 255, .55); }
+    .link svg { width: 20px; height: 20px; flex: none; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .is-pairs .shift-title + .facts { margin-top: 8px; gap: 4px; font-size: 21px; line-height: 1.3; }
+    .before .facts { color: var(--muted); } .before .facts b { color: var(--ink-card); }
+    .is-pairs .shift-title + .shift-text { margin-top: 8px; font-size: 21px; line-height: 1.4; font-weight: 400; }
+    .pair-arrow { align-self: center; justify-self: center; display: grid; place-items: center; width: 64px; height: 64px; border-radius: 50%; background: #fff; box-shadow: 0 8px 24px rgba(0, 0, 0, .25); }
+
+    /* Matrix: a column per step — muted «Было» on dark glass, «Стало» on a blue plate; subgrid keeps the rows aligned across columns */
+    .is-matrix #lead, .is-matrix .labels { display: none; }
+    .is-matrix #shifts { display: block; margin-top: 24px; }
+    /* Tables stretch to the panel bottom: the blue band ends 24px above it, like the side inset */
+    .detail.is-matrix { display: flex; flex-direction: column; padding-bottom: 24px; }
+    .is-matrix #shifts:has(> .mxr) { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+    .is-matrix #shifts > .mxr.tech { flex: 1; } /* one-row tech table: the band runs to the panel bottom */
+    /* Rows share the height evenly, so dividers sit at equal steps down to the panel bottom */
+    /* Spacing by grouping: label → first row 12, between rows 16 (8 + 8 around the divider),
+       band padding 16 ≥ row gap; title block → table 24 — the largest, it separates groups */
+    #shifts .mxr { padding-bottom: 8px; }
+    #shifts .mxr .mxr-head { align-items: end; min-height: 0; }
+    #shifts .mxr .mxr-head > * { padding-top: 16px; padding-bottom: 4px; }
+    #shifts .mxr .mxr-row:not(.mxr-head) > * { padding-top: 8px; padding-bottom: 8px; }
+    #shifts .mxr.two:not(.tech) .mxr-row > span { font-size: 18px; } /* five «Люди» rows must fit the panel */
+    #shifts .mxr.two .mxr-row:not(.mxr-head) { align-items: start; } /* text tops line up across Было / Стало */
+    #shifts .mxr.two .mxr-head > span:last-child { padding-left: 24px; } /* label over the text, not the band edge */
+    .mx { height: 370px; display: grid; grid-template-rows: auto auto 1fr; column-gap: 16px; }
+    .mx-col { grid-row: 1 / 4; grid-column: span 1; display: grid; grid-template-rows: subgrid; padding: 8px; border-radius: 22px; background: linear-gradient(180deg, rgba(255, 255, 255, .07), rgba(255, 255, 255, .02)); border: 1px solid rgba(255, 255, 255, .1); }
+    .mx-col h4 { padding: 14px 14px 0; font-size: 22px; line-height: 1.3; font-weight: 700; color: #fff; }
+    .mx-was { padding: 14px; font-size: 19px; line-height: 1.4; color: #fff; }
+    .mx-now { padding: 16px; border-radius: 16px; background: var(--blue-grad); box-shadow: var(--blue-shadow); font-size: 21px; line-height: 1.35; font-weight: 500; color: #fff; }
+    /* Many steps (Результаты): narrower columns get smaller type and logos */
+    .mx.dense { column-gap: 12px; }
+    .mx.dense .mx-col h4 { padding: 10px 10px 0; font-size: 20px; }
+    .mx.dense .mx-was { padding: 10px; font-size: 18px; line-height: 1.35; }
+    .mx.dense .mx-now { padding: 12px; font-size: 19px; line-height: 1.3; }
+    .mx.dense .mx-now .logos { padding-top: 8px; gap: 4px; }
+    .mx.dense .mx-now .logos img { width: 26px; height: 26px; padding: 4px; border-radius: 7px; }
+    /* Rows: step · Было · metric · Стало; «Стало» column on a blue band */
+    .mxr { position: relative; isolation: isolate; }
+    .mxr::before { content: ''; position: absolute; z-index: -1; top: 0; bottom: 0; right: 0; width: calc((100% - 240px) * 1.25 / 2.25); border-radius: 18px; background: var(--blue-grad); box-shadow: var(--blue-shadow); }
+    .mxr-row { display: grid; grid-template-columns: 240px 1fr 1.25fr; align-items: center; min-height: 49px; }
+    .mxr-row + .mxr-row { border-top: 1px solid rgba(255, 255, 255, .08); }
+    .mxr-head + .mxr-row { border-top: 0; } /* no line under the column labels */
+    .mxr-row > * { padding: 6px 16px; }
+    .mxr-row b { padding-left: 16px; font-size: 22px; font-weight: 600; color: #fff; }
+    .mxr-row > span { font-size: 21px; line-height: 1.3; color: rgba(255, 255, 255, .75); }
+    .mxr-row > .mxr-now { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 12px; padding-left: 24px; font-weight: 500; color: #fff; }
+    .mxr-head { min-height: 36px; }
+    /* Two columns only (shared «Люди»): longer texts, smaller type */
+    .mxr.two::before { width: calc(100% * 1.5 / 2.5); }
+    .mxr.two .mxr-row { grid-template-columns: 1fr 1.5fr; min-height: 0; }
+    .mxr.two .mxr-row > * { padding: 7px 16px; }
+    .mxr.two .mxr-row > span { display: block; font-size: 19px; line-height: 1.3; }
+    .mxr.two .mxr-row > .mxr-now { padding-left: 24px; font-weight: 400; color: rgba(255, 255, 255, .85); }
+    .mxr.two .mxr-row b { padding: 0; font-size: inherit; font-weight: 600; color: rgba(255, 255, 255, .85); }
+    .mxr.two .mxr-now b { color: #fff; }
+    .mxr.two .mxr-head > span { padding-top: 10px; padding-bottom: 6px; }
+    .mxr.two.tech .mxr-row { align-items: start; }
+    .mxr.two.tech .mxr-row > span { font-size: 20px; line-height: 1.35; }
+    .mxr.two.tech.short .mxr-row:not(.mxr-head) > span { font-size: 25px; line-height: 1.35; padding-top: 20px; }
+    .mxr.two ul { margin: 0; padding-left: 26px; display: grid; row-gap: 8px; }
+    .mxr.two li::marker { color: rgba(255, 255, 255, .5); }
+    /* Next to a grouped list: same size and rhythm as its rows */
+    .mxr.two.tech:not(.short) ul { font-size: 19px; line-height: 1.35; row-gap: 12px; padding-left: 22px; }
+    .mxr.two p { margin: 0; } .mxr.two p + p { margin-top: 6px; }
+    .mxr.two .logos { position: static; display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+    /* Grouped tools: label column + text column, groups separated by a hairline */
+    .mxr.two dl { display: grid; grid-template-columns: 250px 1fr; column-gap: 20px; margin: 0; font-size: 19px; }
+    .mxr.two dt, .mxr.two dd { margin: 0; padding: 7px 0; line-height: 1.35; }
+    .mxr.two dt { font-weight: 700; color: #fff; }
+    .mxr.two dd { color: rgba(255, 255, 255, .88); }
+    .mxr.two :is(dt, dd):nth-child(n + 3) { border-top: 1px solid rgba(255, 255, 255, .14); }
+    .mxr.two dt:first-child, .mxr.two dt:first-child + dd { padding-top: 0; }
+    .mxr.two.tech .mxr-row:not(.mxr-head) > span { padding-top: 14px; padding-bottom: 10px; }
+    /* Process table: процесс · Было · Стало · Ценность — the band covers Стало and Ценность */
+    .mxr.four::before { width: calc((100% - 230px) * 2.1 / 3.1); }
+    .mxr.four .mxr-row { grid-template-columns: 230px 1fr 1.2fr .9fr; align-items: start; min-height: 0; }
+    .mxr.four .mxr-row > * { padding: 12px 16px; }
+    .mxr.four .mxr-row:not(.mxr-head) > * { padding-top: 14px; padding-bottom: 14px; }
+    .mxr.four .mxr-row b { font-size: 19px; line-height: 1.3; }
+    .mxr.four .mxr-row > span { font-size: 18px; line-height: 1.3; }
+    .mxr.four .mxr-row > .mxr-now { display: block; padding-left: 24px; font-weight: 400; }
+    .mxr.four .mxr-row > .mxr-value { color: #9FF0E4; }
+    .mxr.four .mxr-head > span:nth-child(3) { padding-left: 24px; color: rgba(255, 255, 255, .8) !important; }
+    .mxr.four .mxr-head > span:last-child { padding-left: 16px; }
+    /* Short texts (brief): larger type, more air */
+    .mxr.four.brief::before { width: calc((100% - 300px) * 2.1 / 3); }
+    .mxr.four.brief .mxr-row { grid-template-columns: 300px .9fr 1.2fr .9fr; }
+    .mxr.four.brief .mxr-row b { font-size: 22px; line-height: 1.35; font-weight: 700; } /* same size as the text, weight sets it apart */
+    .mxr.four.brief .mxr-row > span { font-size: 22px; line-height: 1.35; }
+    /* Three rows only: more air — rows 32 apart (16 + 16), band padding 24 top / 32 bottom */
+    #shifts .mxr.four.brief { padding-bottom: 16px; }
+    #shifts .mxr.four.brief .mxr-head > * { padding-top: 24px; }
+    #shifts .mxr.four.brief .mxr-row:not(.mxr-head) > * { padding-top: 16px; padding-bottom: 16px; }
+    .mxr-head > span { font-size: 15px !important; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: rgba(255, 255, 255, .45) !important; }
+    .mxr-head > span:last-child { padding-left: 24px; color: rgba(255, 255, 255, .8) !important; }
+
+    /* Row labels beside the first column, read bottom-to-top */
+    .mx-label { grid-column: 1; align-self: center; justify-self: center; writing-mode: vertical-rl; rotate: 180deg; font-size: 15px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: rgba(255, 255, 255, .45); }
+    .mx-label-was { grid-row: 2; }
+    .mx-label-now { grid-row: 3; color: #34D1BF; }
+
+    /* Stage table: Было / Стало · что изменили / В цифрах */
+    .role.static { cursor: default; }
+    .role.static:hover, .role.static:active { transform: none; box-shadow: var(--card-shadow); }
+    .is-table #lead, .is-table .labels { display: none; }
+    .is-table #shifts { grid-template-columns: 300px 520px 1fr; row-gap: 0; margin-top: 16px; }
+    .is-table #shifts h3 { height: 56px; margin-bottom: 10px; padding-left: 16px; white-space: nowrap; }
+    .tbl-card { height: 312px; padding: 24px; border-radius: 22px; display: flex; flex-direction: column; gap: 4px; background: var(--blue-grad); box-shadow: var(--blue-shadow); }
+    .tbl-card.before { background: var(--card-grad); border: 1.5px solid rgba(255, 255, 255, .95); box-shadow: var(--card-shadow); }
+    .tbl-card .shift-title { line-height: 1.25; text-wrap: balance; }
+    .tbl-card ul { margin: 8px 0 0; padding-left: 22px; display: flex; flex-direction: column; gap: 6px; font-size: 20px; line-height: 1.4; }
+    .tbl-nums { height: 312px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .num { display: flex; flex-direction: column; padding: 22px 22px 20px; border-radius: 20px; background: rgba(255, 255, 255, .07); border: 1px solid rgba(255, 255, 255, .12); }
+    .num span { font-size: 20px; line-height: 1.3; color: rgba(255, 255, 255, .85); text-wrap: balance; }
+    .num b { margin-top: auto; font-size: 40px; line-height: 1.08; font-weight: 700; letter-spacing: -.02em; font-variant-numeric: tabular-nums; text-wrap: balance; }
+    .num small { margin-top: 10px; font-size: 19px; line-height: 1.3; color: #fff; }
+    .num.todo { background: none; border: 1.5px dashed rgba(255, 255, 255, .35); }
+    .num.todo b { color: rgba(255, 255, 255, .45); }
+
+    .shift > img, .tbl-card > img { width: 32px; height: 32px; margin-bottom: 4px; }
+
+    .num b .u, .kpi .u { font-size: .62em; font-weight: 600; letter-spacing: 0; }
+
+    /* Brand logo chips: white tiles so every logo keeps its own colours on blue and white cards */
+    .shift, .tbl-card { position: relative; }
+    .shift .logos, .tbl-card .logos { position: absolute; top: 24px; right: 24px; display: flex; gap: 8px; }
+    .logos img { width: 44px; height: 44px; padding: 9px; border-radius: 12px; background: #fff; box-shadow: 0 2px 8px rgba(22, 35, 62, .12); object-fit: contain; }
+    .mx-now { display: flex; flex-direction: column; }
+    .mx-now .logos { margin-top: auto; padding-top: 12px; display: flex; flex-wrap: wrap; gap: 6px; }
+    .mx-now .logos img { width: 34px; height: 34px; padding: 6px; border-radius: 9px; }
+
+    /* Unfilled slot of the IA template */
+    .ph { opacity: .4; font-style: italic; }
+
+    @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+  </style>
+</head>
+<body>
+  <main class="slide" id="slide">
+    <section class="cover" id="cover" hidden>
+      <svg class="cover-hex" id="cover-hex" viewBox="0 0 1920 1080" aria-hidden="true">
+        <defs>
+          <path id="hex" d="M36.9954 1.80569C41.1654 -0.601895 46.3031 -0.601896 50.4732 1.80568L80.7297 19.2743C84.8997 21.6818 87.4686 26.1312 87.4686 30.9464V65.8835C87.4686 70.6987 84.8997 75.1481 80.7297 77.5557L50.4732 95.0243C46.3031 97.4318 41.1654 97.4318 36.9954 95.0243L6.73891 77.5557C2.56886 75.1481 0 70.6987 0 65.8835V30.9464C0 26.1312 2.56886 21.6818 6.73891 19.2743L36.9954 1.80569Z"/>
+        </defs>
+      </svg>
+      <img class="cover-logo" src="assets/logo.svg" width="247" height="51" alt="vebtech">
+      <div class="cover-main">
+        <h1 class="cover-title">Трансформация производственного процесса</h1>
+        <p class="cover-lead">От заказной к&nbsp;ценностно-ориентированной разработке с&nbsp;применением инструментов цифровизации</p>
+      </div>
+      <a class="cover-qr" href="https://idea-to-decision.vercel.app" target="_blank" rel="noopener" aria-label="Открыть презентацию: idea-to-decision.vercel.app"><img src="assets/qr.svg" alt=""></a>
+      <!-- Было / Стало: linear order-taking vs the value cycle -->
+      <div class="cover-flows">
+        <figure class="flow was">
+          <figcaption><span class="flow-tag">Было</span>Делаем то, что в&nbsp;ТЗ</figcaption>
+          <div class="flow-steps"><span class="chip">Запрос заказчика</span><img src="assets/arrow-nav.svg" alt=""><span class="chip">ТЗ</span><img src="assets/arrow-nav.svg" alt=""><span class="chip">Разработка</span><img src="assets/arrow-nav.svg" alt=""><span class="chip">Сдача по&nbsp;ТЗ</span></div>
+        </figure>
+        <figure class="flow now">
+          <figcaption><span class="flow-tag">Стало</span>Поставляем ценность<span class="flow-ai"><img src="assets/icon-ai.svg" width="16" height="16" alt="">AI Boost на&nbsp;каждом этапе</span></figcaption>
+          <div class="flow-steps cycle"><span class="chip">Идея</span><img src="assets/arrow-nav.svg" alt=""><span class="chip">Исследование</span><img src="assets/arrow-nav.svg" alt=""><span class="chip">Разработка</span><img src="assets/arrow-nav.svg" alt=""><span class="chip">Мониторинг</span><img src="assets/arrow-nav.svg" alt=""><span class="chip">Ценность</span></div>
+        </figure>
+      </div>
+      <p class="cover-areas-label">Трансформация в&nbsp;трёх ключевых областях</p>
+      <div class="cover-areas">
+        <article class="area">
+          <div class="area-head"><span class="area-icon"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><path d="M16 3.128a4 4 0 0 1 0 7.744"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><circle cx="9" cy="7" r="4"/></svg></span><h2>Люди</h2></div>
+          <p class="area-sub">От исполнителей к&nbsp;владельцам продукта</p>
+          <p class="area-meta">Управление · Компетенции · Культура · Мотивация</p>
+        </article>
+        <article class="area">
+          <div class="area-head"><span class="area-icon"><svg viewBox="0 0 24 24"><rect width="8" height="8" x="3" y="3" rx="2"/><path d="M7 11v4a2 2 0 0 0 2 2h4"/><rect width="8" height="8" x="13" y="13" rx="2"/></svg></span><h2>Процессы</h2></div>
+          <p class="area-sub">Жизненный цикл разработки (SDLC)</p>
+          <p class="area-meta">Шесть этапов: от&nbsp;идеи до&nbsp;результата</p>
+        </article>
+        <article class="area">
+          <div class="area-head"><span class="area-icon"><svg viewBox="0 0 24 24"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"/><path d="M20 2v4"/><path d="M22 4h-4"/><circle cx="4" cy="20" r="2"/></svg></span><h2>Технологии</h2></div>
+          <p class="area-sub">AI-инструменты</p>
+          <p class="area-meta">Оптимизация и&nbsp;автоматизация процессов</p>
+        </article>
+      </div>
+      <p class="cover-hint" aria-label="Навигация">
+        <kbd>→</kbd><kbd>Пробел</kbd><kbd>PageDown</kbd> дальше
+        <span class="sep"></span><kbd>←</kbd><kbd>PageUp</kbd> назад
+        <span class="sep"></span>на телефоне — свайп
+        <span class="sep"></span>или
+        <button class="pill step-btn step-btn-sm" data-step="1" aria-label="Вперёд"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button>
+      </p>
+    </section>
+
+    <div id="deck" hidden>
+    <button class="logo" data-cover aria-label="На обложку"><img src="assets/logo.svg" width="190" height="39" alt="vebtech"></button>
+    <nav class="stepper" id="stepper" aria-label="Этапы"></nav>
+    <div class="step-nav" aria-label="Навигация">
+      <button class="pill step-btn" data-step="-1" aria-label="Назад"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button>
+      <button class="pill step-btn" data-step="1" aria-label="Вперёд"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button>
+      <button class="pill step-restart" data-cover hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>Заново</button>
+    </div>
+    <section class="overview" id="overview"></section>
+    <section class="detail" id="detail">
+      <div class="detail-head">
+        <h2 id="role-title"></h2>
+        <div class="tabs" id="tabs" role="tablist" aria-label="Срез"></div>
+        <p class="detail-value" id="detail-value"></p>
+      </div>
+      <p class="lead" id="lead" aria-live="polite"></p>
+      <div class="grid labels"><h3>Было</h3><h3>Стало</h3></div>
+      <div class="grid" id="shifts"></div>
+    </section>
+    <div class="modal" id="more" hidden role="dialog" aria-modal="true" aria-labelledby="more-title">
+      <div class="modal-card">
+        <div class="modal-head"><h2><span id="more-title"></span> · все изменения</h2><button class="pill modal-close" data-step="1" aria-label="Далее"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button></div>
+        <div class="modal-body" id="more-body"></div>
+      </div>
+    </div>
+    </div>
+  </main>
+  <script src="content.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
