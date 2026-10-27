@@ -175,7 +175,7 @@ function renderTable(t) {
       <ul>${d.after.items.map((x) => `<li>${x}</li>`).join('')}</ul>
     </article>
     <div class="tbl-nums t-item">
-      ${d.numbers.map((n) => `<div class="num${n.todo ? ' todo' : ''}"><span>${n.label}</span><b>${units(n.value)}</b><small>${n.note}</small></div>`).join('')}
+      ${d.numbers.map((n) => `<div class="num${n.todo ? ' todo' : ''}"><span>${n.label}</span>${n.period ? `<em class="num-period">${n.period}</em>` : ''}<b>${units(n.value)}</b><small>${n.note}</small></div>`).join('')}
     </div>`;
 }
 

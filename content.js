@@ -36,7 +36,7 @@
   └─ lenses {people, process, tech}
      ├─ before [title, text]           «Было»
      ├─ after  {title, items[], logos[]}  «Стало · что изменили»; logos — названия из LOGOS в app.js
-     └─ numbers[3] {value, label, note, todo}   «В цифрах»; todo — цифру уточнить (пунктир)
+     └─ numbers[3] {value, label, period, note, todo}   period — мелко под подписью   «В цифрах»; todo — цифру уточнить (пунктир)
 */
 
 const lens = (lead = '', before = ['', ''], ai = ['', ''], human = ['', '']) => ({
@@ -379,7 +379,7 @@ window.DECK = {
             after: { title: '', items: ['Трансформация модели поведения', 'Внутреннее предпринимательство', 'Развитие навыков ключевых сотрудников', 'Мотивация лидеров изменений', 'Популяризация: iDEA и Банк идей'] },
             numbers: [
               { value: '38 → 45', label: 'Авторов идей в год', note: '+7 (+18%) · 2025 → 2026' },
-              { value: '108 → ~140', label: 'Участников OKR', note: '36% → 41% сотрудников · 2025 → 2026' },
+              { value: '108 → ~140', label: 'Участников OKR', period: '2025 → 2026', note: '36% → 41% сотрудников' },
               { value: '30+', label: 'Лидеров изменений', note: '10% сотрудников' },
             ],
           },
@@ -493,12 +493,12 @@ window.DECK = {
             { title: 'Дизайн-система', items: [
               ['SOLAR Design system', 'https://www.behance.net/gallery/242158107/SOLAR-Design-system', 'Behance'],
               ['Solar 2.0', 'https://www.figma.com/design/sIra8WFN3iWVNvDajCMAbB/Solar-2.0?node-id=1-7265&t=GOWMljP6QvAZwLx0-1', 'Figma'],
+              ['Дизайн-система для презентаций', 'https://vebtech-ds.vercel.app/', 'Vercel'],
             ] },
             { title: 'Демо', items: [
               ['Дизайн-система Solar 2.0', 'https://youtu.be/vW7hiAKra20', 'YouTube'],
               ['Проект WIN · I квартал 2026', 'https://youtu.be/B6fJ285CyjA', 'YouTube'],
               ['Банк идей', 'https://youtu.be/ea1g3EHpqh0', 'YouTube'],
-              ['Дизайн-система для презентаций', 'https://vebtech-ds.vercel.app/', 'Vercel'],
             ] },
           ],
         },
