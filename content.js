@@ -115,8 +115,11 @@ const IDEA_ROWS = {
 const DISCOVERY_ROWS = {
   links: [
     { title: 'Инструменты', items: [
-      ['AI-агент Discovery', 'https://youtu.be/XrCnZLcOLGs?si=R_o6jmZ77bxODZg9', 'YouTube'],
+      ['AI-агент Discovery', 'https://discovery.130.17.25.36.sslip.io/', 'sslip.io'],
       ['Продуктовый подход', 'https://wiki.vebtech.by/spaces/Learn/pages/232653829/%D0%9F%D1%80%D0%BE%D0%B4%D1%83%D0%BA%D1%82%D0%BE%D0%B2%D1%8B%D0%B9+%D0%BF%D0%BE%D0%B4%D1%85%D0%BE%D0%B4', 'Wiki'],
+    ] },
+    { title: 'Демо', items: [
+      ['AI-агент Discovery', 'https://youtu.be/XrCnZLcOLGs?si=R_o6jmZ77bxODZg9', 'YouTube'],
     ] },
   ],
   process: [
