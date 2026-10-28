@@ -115,7 +115,7 @@ const IDEA_ROWS = {
 const DISCOVERY_ROWS = {
   links: [
     { title: 'Инструменты', items: [
-      ['AI-агент Discovery', 'https://youtu.be/ea1g3EHpqh0', 'YouTube'],
+      ['AI-агент Discovery', 'https://youtu.be/XrCnZLcOLGs?si=R_o6jmZ77bxODZg9', 'YouTube'],
       ['Продуктовый подход', 'https://wiki.vebtech.by/spaces/Learn/pages/232653829/%D0%9F%D1%80%D0%BE%D0%B4%D1%83%D0%BA%D1%82%D0%BE%D0%B2%D1%8B%D0%B9+%D0%BF%D0%BE%D0%B4%D1%85%D0%BE%D0%B4', 'Wiki'],
     ] },
   ],
@@ -371,7 +371,7 @@ window.DECK = {
       shared: IDEA_ROWS, // Процессы и Технологии — таблицами, Люди — как было
       label: 'Идея',
       title: 'Идея',
-      insight: { problem: 'Заказная разработка без этапа сбора идей', value: 'Идеи собираются из трёх источников' },
+      insight: { problem: 'Заказная разработка без этапа сбора идей' },
       table: {
         title: 'Работа с идеей',
         lenses: {
