@@ -172,9 +172,9 @@ const DEV_ROWS = {
       ] },
       { title: 'Прототипы и презентации', items: [
         ['Прототип: переходы страниц', 'https://v0-figma-page-transition.vercel.app/', 'Vercel'],
-        ['Прототип 1', 'https://wiki.belveb.by/x/IPoEDw', 'Wiki БелВЭБ'],
-        ['Прототип 2', 'https://wiki.belveb.by/x/WrHnDw', 'Wiki БелВЭБ'],
-        ['Прототип 3', 'https://wiki.belveb.by/x/X364Cw', 'Wiki БелВЭБ'],
+        ['Фин рынки', 'https://v0.app/zaech1998-2559s-projects/chat/dealer-order-creation-jeMShYZCDsf', 'v0'],
+        ['ГЭДК Привет!', 'https://akabanov1983-hue.github.io/verification-report-forn-prototype/', 'GitHub Pages'],
+        ['AML — Панель администрирования', 'https://gorules-aml-implemen-pu99.bolt.host/', 'Bolt'],
         ['Персональная аналитика расходов в Up Online', 'https://wiki.vebtech.by/download/attachments/343593731/v_1.2%20%D0%BF%D1%80%D0%B5%D0%B7%D0%B0%20%D0%98%D1%81%D1%81%D0%BB%D0%B5%D0%B4%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%20%D0%B2%D0%BE%D0%B7%D0%BC%D0%BE%D0%B6%D0%BD%D0%BE%D1%81%D1%82%D0%B8%20%D0%B2%D0%BD%D0%B5%D0%B4%D1%80%D0%B5%D0%BD%D0%B8%D1%8F%20%D0%BF%D0%B5%D1%80%D1%81%D0%BE%D0%BD%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%D0%B9%20%D0%B0%D0%BD%D0%B0%D0%BB%D0%B8%D1%82%D0%B8%D0%BA%D0%B8%20%D1%80%D0%B0%D1%81%D1%85%D0%BE%D0%B4%D0%BE%D0%B2%20%D0%B2%20Up%20Online.pptx?version=1&modificationDate=1791208613933&api=v2', 'PPTX'],
         ['Результаты анализа', 'https://wiki.vebtech.by/spaces/PRESALE/pages/343581128/%D0%A0%D0%B5%D0%B7%D1%83%D0%BB%D1%8C%D1%82%D0%B0%D1%82%D1%8B+%D0%B0%D0%BD%D0%B0%D0%BB%D0%B8%D0%B7%D0%B0', 'Wiki'],
       ] },
