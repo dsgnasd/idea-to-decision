@@ -483,7 +483,7 @@ window.DECK = {
           // Вкладка «Артефакты»: группы ссылок [название, url, площадка]
           links: [
             { title: 'UX-исследования', items: [
-              ['AI UX case', 'https://cloud.mail.ru/home/AI%20UX%20case', 'Облако Mail'],
+              ['AI UX case', 'https://drive.google.com/drive/folders/181CVECcdeCOzphAKwAg1dRySy215skAM?usp=sharing', 'Google Drive'],
             ] },
             { title: 'Прототипы', items: [
               ['Belconnect', 'https://belconnect.figma.site/', 'Figma Site'],
