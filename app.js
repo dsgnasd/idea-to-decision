@@ -261,6 +261,10 @@ function setModal(open) {
 
 // Artifact card for an internal link: name, description, the link itself and a screenshot (placeholder until the file exists).
 // Item: [name, url, host, description, screenshot?] — screenshot is a file name in assets/artifacts/
+// Description: a string, or a list of parts — strings are paragraphs, { title, items: [[label, text]] } a titled list
+const describe = (v) => (Array.isArray(v) ? v : [v]).map((p) => typeof p === 'string' ? `<p class="art-value">${p}</p>`
+  : `<p class="art-list-title">${p.title}</p><ul class="art-list">${p.items.map(([b, t]) => `<li><b>${b}</b> — ${t}</li>`).join('')}</ul>`).join('');
+
 function setArtifact(i) {
   const m = $('art');
   if (i == null) {
@@ -274,7 +278,7 @@ function setArtifact(i) {
   try { shown = decodeURI(url); } catch {} // wiki addresses are percent-encoded; show them readable
   $('art-title').textContent = name;
   $('art-text').innerHTML = `
-    <p class="art-value">${value}</p>
+    ${describe(value)}
     <p class="art-label">Ссылка · ${host}</p>
     <a class="art-url" href="${url}" target="_blank" rel="noopener">${shown}</a>
     <p class="art-note">${LOCK}Открывается только во внутренней сети Vebtech</p>`;

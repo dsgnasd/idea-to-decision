@@ -17,7 +17,7 @@
      ├─ effect, kpi {value, label}     эффект роли в шапке тёмной панели и мелкая цифра (withEffect)
      ├─ person                         кто принимает решение (метка 3-й карточки «Стало»)
      ├─ lenses {people, process, tech} табы тёмной панели: Люди / Процессы / Технологии
-     └─ links [{title, items[[name, url, host, описание?, скриншот?]]}] — описание и скриншот для внутренних ссылок (карточка вместо перехода)  необязательно: вкладка «Артефакты» со ссылками
+     └─ links [{title, items[[name, url, host, описание?, скриншот?]]}] — описание: строка или [абзацы, { title, items: [[жирное, текст]] }] — описание и скриншот для внутренних ссылок (карточка вместо перехода)  необязательно: вкладка «Артефакты» со ссылками
         ├─ lead                        вводный абзац
         ├─ before {title, text}        «Было»
         ├─ ai     {title, text}        «Стало» · С AI
@@ -166,7 +166,6 @@ const DEV_ROWS = {
         ['Анализ изменений протоколов', 'https://wiki.belveb.by/spaces/UJBG/pages/272994264/%D0%90%D0%BD%D0%B0%D0%BB%D0%B8%D0%B7+%D0%B8%D0%B7%D0%BC%D0%B5%D0%BD%D0%B5%D0%BD%D0%B8%D0%B9+3+%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D0%B8+%D0%BF%D1%80%D0%BE%D1%82%D0%BE%D0%BA%D0%BE%D0%BB%D0%BE%D0%B2', 'Wiki БелВЭБ', 'Артефакт анализа: сравнение версий протоколов, чтобы прозрачно видеть, что изменилось между итерациями требований.', 'protocol-changes.webp'],
       ] },
       { title: 'Требования', items: [
-        ['Use Case: проверка по списку АСОИ', '', 'Wiki БелВЭБ'],
         ['Use Case: запрос на возврат', 'https://wiki.belveb.by/spaces/UJBG/pages/261948968/FR_5.2+UC_2+%D0%A4%D0%BE%D1%80%D0%BC%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5+%D0%B7%D0%B0%D0%BF%D1%80%D0%BE%D1%81%D0%B0+%D0%BD%D0%B0+%D0%B2%D0%BE%D0%B7%D0%B2%D1%80%D0%B0%D1%82', 'Wiki БелВЭБ', 'Use case оформления запроса на возврат: сценарий взаимодействия пользователя и системы для согласованной реализации.', 'use-case-refund.webp'],
         ['Простой путь стать ИП/ЮЛ', 'https://wiki.vebtech.by/spaces/PRESALE/pages/343584938/%D0%9F%D1%80%D0%BE%D1%81%D1%82%D0%BE%D0%B9+%D0%BF%D1%83%D1%82%D1%8C+%D1%81%D1%82%D0%B0%D1%82%D1%8C+%D0%98%D0%9F+%D0%AE%D0%9B', 'Wiki', 'Клиентский путь регистрации ИП и ООО в Up Online: прототип, диаграмма последовательности и экраны по шагам — от анкеты до открытия счёта.', 'ip-ul.webp'],
       ] },
@@ -234,7 +233,7 @@ const DEV_ROWS = {
   backend: {
     links: [
       { title: 'Инструменты', items: [
-        ['AssessmentHub', '', 'Vebtech'],
+        ['AssessmentHub', 'https://assessment-hub.vebtech.pro/', 'Vebtech', 'Картотека разработчиков для ассессмента: брифы, анализ merge request’ов и готовые отчёты с рекомендованным уровнем от AI.', 'assessment-hub.webp'],
         ['VebTech Codex Max', 'https://wiki.vebtech.by/x/O7h6F', 'Wiki', 'VebTech Codex Max — агентская среда разработки с памятью проекта, навыками (skills) и доступом к корпоративной LLM.', 'codex-max.webp'],
         ['Tech Radar', 'https://dev-app-tech-radar.lab.vebtech.by/', 'Vebtech', 'Технологический радар компании: какие технологии в статусах adopt / trial / assess / hold — единая ориентация для команд и онбординга.', 'tech-radar.webp'],
       ] },
@@ -261,12 +260,11 @@ const DEV_ROWS = {
   frontend: {
     links: [
       { title: 'Шаблон и конфигурации', items: [
-        ['Шаблон React-приложения: PWA, TWA, RU/EN', '', 'GitLab'],
-        ['Общие конфигурации frontend-configs', '', 'GitLab'],
+        ['Шаблон React-приложения: PWA, TWA, RU/EN', 'https://vt-gitlab-new.lab.vebtech.by/develop-frontend/react-project-template', 'GitLab', 'Шаблон React-приложения — готовая основа для быстрого запуска frontend-проектов на React и TypeScript. Включает единую структуру приложения, компоненты Solar UI, поддержку PWA, локализацию интерфейса и средства работы с API. Предусмотрены инструменты тестирования, проверки качества кода и мониторинга ошибок. Шаблон сокращает время первоначальной настройки и помогает команде придерживаться единых стандартов разработки.', 'react-template.png'],
+        ['Общие конфигурации frontend-configs', 'https://vt-gitlab-new.lab.vebtech.by/develop-frontend/frontend-configs', 'GitLab', 'Frontend Configs — общий набор конфигураций для frontend-проектов на React и TypeScript. Объединяет правила проверки кода ESLint, форматирования Prettier и оформления коммитов Commitlint с привязкой к задачам Jira. Подключается одной командой с пошаговой настройкой. Помогает поддерживать единый стиль кода, упрощает настройку новых проектов и обновление правил разработки.', 'frontend-configs.png'],
       ] },
       { title: 'Дизайн-система Solar UI', items: [
-        ['Сайт дизайн-системы', '', 'Vebtech'],
-        ['Репозиторий', '', 'GitLab'],
+        ['Сайт дизайн-системы', 'https://solar-ui-2.lab.vebtech.by/', 'Vebtech', 'Solar UI — единая дизайн-система и библиотека компонентов для React-приложений на TypeScript. Включает готовые элементы интерфейса: кнопки, поля ввода, таблицы, календари, диалоговые окна и графики. Интерактивный каталог Storybook помогает выбирать компоненты и знакомиться с вариантами их использования. Solar UI обеспечивает единый стиль интерфейсов, сокращает повторную разработку и ускоряет создание новых продуктов.', 'solar-ui-site.png'],
       ] },
       { title: 'Качество', items: [
         ['Quality Gates & Code Style', 'https://wiki.vebtech.by/spaces/Learn/pages/255824494/Quality+gates?preview=/255824494/255824545/Quality%20Gates%20%26%20Code%20Style.pdf', 'Wiki', 'Стандарты Quality Gates и code style: правила качества кода, встроенные в CI/CD, которые снижают число сюрпризов на тестировании.', 'quality-gates.webp'],
@@ -296,13 +294,29 @@ const DEV_ROWS = {
     links: [
       { title: 'Инструменты', items: [
         ['QA Hub', 'https://qa-hub.vebtech.by/', 'Vebtech', 'QA Hub — пространство QA Vebtech: материалы, практики и инструменты тестирования для команд в одном месте.', 'qa-hub.webp'],
-        ['ReportPortal', '', 'Vebtech'],
+        ['ReportPortal', 'https://dev-reportportal.lab.vebtech.by/', 'Vebtech', [
+          'ReportPortal — единый центр результатов автотестов: собирает прогоны из CI/CD в одном месте — статусы тестов, ошибки, логи и отчёты.',
+          { title: 'Ценность для команды', items: [
+            ['Прозрачность качества', 'сразу видно, какие тесты прошли и где возникли проблемы.'],
+            ['Быстрее разбор ошибок', 'результаты и детали сбоев доступны без поиска по разным сборкам.'],
+            ['Контроль динамики', 'история прогонов помогает отслеживать повторяющиеся ошибки и нестабильные тесты.'],
+            ['Поддержка решений о релизе', 'общая картина результатов тестирования для QA, разработки и менеджмента.'],
+          ] },
+        ], 'reportportal.webp'],
         ['AI-ассистент vebtech', 'https://assistants-platform-dev.lab.vebtech.by/', 'Vebtech AI', 'Внутренняя платформа AI-ассистентов: чаты и боты под задачи проектов (требования, BPMN/UML, ревью, обогащение БТ и др.).', 'assistants-platform.webp'],
       ] },
       { title: 'Примеры', items: [
-        ['Test execution в Xray', '', 'Jira БелВЭБ'],
-        ['Feature test exit report', '', 'Wiki БелВЭБ'],
-        ['Release test exit report', '', 'Wiki БелВЭБ'],
+        ['Test execution в Xray', 'https://jira.belveb.by/browse/SDBOFLAG-22960', 'Jira БелВЭБ', [
+          'Test Execution в Xray — управление тестовыми прогонами: объединяет тесты в конкретный прогон и фиксирует результаты проверки выбранной версии или сборки.',
+          { title: 'Ценность для команды', items: [
+            ['Контроль прогресса', 'видно, что уже проверено, что осталось и где есть блокеры.'],
+            ['Прослеживаемость', 'результаты связаны с тестами и найденными дефектами.'],
+            ['Координация работы', 'понятно, кто отвечает за выполнение тестов.'],
+            ['Основа для решения о релизе', 'зафиксировано, что проверили и с каким результатом.'],
+          ] },
+        ], 'xray-execution.png'],
+        ['Feature test exit report', 'https://wiki.vebtech.by/spaces/QT/pages/278267333/Feature+test+exit+report', 'Wiki', 'Feature test exit report — итоговый отчёт по завершении тестирования конкретной функциональности. Он фиксирует, что именно проверено, какие дефекты найдены или остаются открытыми и можно ли считать фичу готовой к дальнейшей интеграции или релизу.', 'feature-exit-report.png'],
+        ['Release test exit report', 'https://wiki.vebtech.by/spaces/QT/pages/278267378/Release+test+exit+report', 'Wiki', 'Release test exit report — итоговый документ, который фиксирует результаты релизного тестирования и даёт объективную основу для решения о выпуске релиза. Он показывает, какие проверки выполнены, какие дефекты остались, какие риски приняты и выполнены ли критерии завершения тестирования.', 'release-exit-report.png'],
       ] },
     ],
     process: [
@@ -336,10 +350,10 @@ const DEV_ROWS = {
 const MONITORING_ROWS = {
   links: [
     { title: 'Дашборды Grafana', items: [
-      ['Observability: метрики, логи и трейсы в одном окне', 'https://vt-mon-grafana.lab.vebtech.by/d/26d4c30b-dd1c-49db-8f5f-c9a6447bba1e/simple-clickhouse-otel-dashboard-dev?orgId=1&from=now-30m&to=now&timezone=Europe%2FMoscow&var-datasource=dfak3urqkerr4f&var-serviceName=$__all&var-trace_id=$__all', 'Grafana', 'Дашборд observability: метрики, логи и трейсы вместе — быстрее находить причину сбоя и понимать поведение сервиса в эксплуатации.', 'observability.webp'],
-      ['Стенд нагрузочного тестирования', '', 'Grafana'],
-      ['Бизнес-метрики кредитной платформы', '', 'Grafana'],
-      ['Сервис с AI-подсказками: что значит и как реагировать', '', 'Grafana'],
+      ['Observability: метрики, логи и трейсы в одном окне', 'https://vt-mon-grafana.lab.vebtech.by/d/26d4c30b-dd1c-49db-8f5f-c9a6447bba1e/simple-clickhouse-otel-dashboard-dev?orgId=1&from=now-30m&to=now&timezone=Europe%2FMoscow&var-datasource=dfak3urqkerr4f&var-serviceName=$__all&var-trace_id=$__all', 'Grafana', 'Сквозная видимость: метрики, логи и трейсы в одном окне — из метрики можно перейти к конкретному трейсу, из трейса открыть его логи и т. д.', 'observability.png'],
+      ['Стенд нагрузочного тестирования', 'https://vt-mon-grafana.lab.vebtech.by/d/bf3a7q2uehfr4f/apache-jmeter-dashboard-aml?var-interval=1m&orgId=1&from=2025-11-14T02:11:11.276Z&to=2025-11-14T11:42:33.152Z&timezone=browser&var-data_source=cf3a523h6hurka&var-application=AML&var-transaction=Transaction%20-%20AML%20Search', 'Grafana', 'Мониторинг результатов нагрузочного тестирования для оптимизации производительности сервисов.', 'load-testing.png'],
+      ['Бизнес-метрики кредитной платформы', 'https://vt-mon-grafana.lab.vebtech.by/d/efolgnl2pa9kwc/biznes-panel--kreditnaja-platforma?orgId=1&from=now-12h&to=now&timezone=browser&var-Env=hbHg1g1Vk&var-job=cmp-qa&var-status_ru=$__all&var-product_ru=$__all', 'Grafana', 'Дашборды для бизнеса с показателями работы продукта и процесса.', 'business-metrics.png'],
+      ['Сервис с AI-подсказками: что значит и как реагировать', 'https://vt-mon-grafana.lab.vebtech.by/d/fg238mpw99p1cs/jvm-micrometer-erip?orgId=1&from=now-15m&to=now&timezone=browser&var-Env=hbHg1g1Vk&var-namespace=belvebapp-lte&var-application=belvebapp-erip&var-instance=$__all&var-jvm_memory_pool_heap=$__all&var-jvm_memory_pool_nonheap=$__all&var-jvm_buffer_pool=$__all&refresh=30s', 'Grafana', 'Запрос консультации AI в чате по событию мониторинга: вероятная причина, шаги проверки и рекомендации по устранению.', 'ai-alert-consult.png'],
     ] },
   ],
   process: [
