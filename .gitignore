@@ -7,3 +7,6 @@
 *.docx
 # archived mobile reading view, kept locally only
 mobile/
+
+# pdf export tooling (pdf branch)
+export/

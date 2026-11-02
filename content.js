@@ -17,7 +17,7 @@
      ├─ effect, kpi {value, label}     эффект роли в шапке тёмной панели и мелкая цифра (withEffect)
      ├─ person                         кто принимает решение (метка 3-й карточки «Стало»)
      ├─ lenses {people, process, tech} табы тёмной панели: Люди / Процессы / Технологии
-     └─ links [{title, items[[name, url, host]]}]  необязательно: вкладка «Артефакты» со ссылками
+     └─ links [{title, items[[name, url, host, описание?, скриншот?]]}] — описание и скриншот для внутренних ссылок (карточка вместо перехода)  необязательно: вкладка «Артефакты» со ссылками
         ├─ lead                        вводный абзац
         ├─ before {title, text}        «Было»
         ├─ ai     {title, text}        «Стало» · С AI
@@ -78,9 +78,9 @@ const IDEA_ROWS = {
   // Ссылки из «Направления_IDEA_Discovery.docx»
   links: [
     { title: 'Инструменты', items: [
-      ['Банк идей', 'https://dev-api-aicb.lab.vebtech.by/database', 'Vebtech'],
-      ['Канал iDEA', 'https://myteam.mail.ru/profile/VTiDEA', 'VK WorkSpace'],
-      ['OKR 2026', 'https://wiki.vebtech.by/spaces/CI/pages/302256305/OKR+2026', 'Wiki'],
+      ['Банк идей', 'https://dev-api-aicb.lab.vebtech.by/database', 'Vebtech', 'Единый реестр инициатив сотрудников: идеи собираются без дублей и доступны для рассмотрения и связи с целями компании.', 'idea-bank.webp'],
+      ['Канал iDEA', 'https://myteam.mail.ru/profile/VTiDEA', 'VK WorkSpace', 'Канал популяризации внутреннего предпринимательства: новости, вовлечение авторов идей и видимость инициатив в компании.', 'idea-channel.webp'],
+      ['OKR 2026', 'https://wiki.vebtech.by/spaces/CI/pages/302256305/OKR+2026', 'Wiki', 'Страница целей и ключевых результатов: методика и приоритеты, с которыми связывают отобранные идеи и продуктовые инициативы.', 'okr-2026.webp'],
     ] },
   ],
   process: [
@@ -116,7 +116,7 @@ const DISCOVERY_ROWS = {
   links: [
     { title: 'Инструменты', items: [
       ['AI-агент Discovery', 'https://discovery.130.17.25.36.sslip.io/', 'sslip.io'],
-      ['Продуктовый подход', 'https://wiki.vebtech.by/spaces/Learn/pages/232653829/%D0%9F%D1%80%D0%BE%D0%B4%D1%83%D0%BA%D1%82%D0%BE%D0%B2%D1%8B%D0%B9+%D0%BF%D0%BE%D0%B4%D1%85%D0%BE%D0%B4', 'Wiki'],
+      ['Продуктовый подход', 'https://wiki.vebtech.by/spaces/Learn/pages/232653829/%D0%9F%D1%80%D0%BE%D0%B4%D1%83%D0%BA%D1%82%D0%BE%D0%B2%D1%8B%D0%B9+%D0%BF%D0%BE%D0%B4%D1%85%D0%BE%D0%B4', 'Wiki', 'База знаний с методикой продуктового подхода: как переходить от идеи и исследования к целям, решению и измеримому результату.', 'product-approach.webp'],
     ] },
     { title: 'Демо', items: [
       ['AI-агент Discovery', 'https://youtu.be/XrCnZLcOLGs?si=R_o6jmZ77bxODZg9', 'YouTube'],
@@ -156,30 +156,27 @@ const DEV_ROWS = {
   analysis: {
     links: [
       { title: 'AI-ассистенты vebtech', items: [
-        ['AI-Native SDLC', 'https://ai-sdlc.lab.vebtech.by/login', 'Vebtech'],
-        ['Требования проекта БВ Страхование', 'https://assistants-platform-dev.lab.vebtech.by/chat/13', 'Vebtech AI'],
-        ['BPMN-диаграммы', 'https://assistants-platform-dev.lab.vebtech.by/chat/17', 'Vebtech AI'],
+        ['AI-Native SDLC', 'https://ai-sdlc.lab.vebtech.by/login', 'Vebtech', 'Подход и среда AI-Native SDLC: единая рамка того, как AI встраивается в цикл разработки — от анализа до поставки.', 'ai-native-sdlc.webp'],
+        ['Платформа AI-ассистентов', 'https://assistants-platform-dev.lab.vebtech.by/', 'Vebtech AI', 'Внутренняя платформа AI-ассистентов: чаты и боты под задачи проектов (требования, BPMN/UML, ревью, обогащение БТ и др.).', 'assistants-platform.webp'],
         ['UML-диаграммы', 'https://www.plantuml.com/plantuml/uml/V5FHJXD157sVhxYfB_g0gLg1cDJOrYuQYA88JxmixL0sbDcwkmqQOq9BWYQIe49YWX54dqcMGhMqjFs5kx_WbtXcQAYjWMxIsRdtt7DdxZdxm0ziBoYl54NW14L9lCTjRd78fzmUuLhqWKyuZDvnI54LqJFky2-k0zF6sodn4O9jRd87s8fP4Jn6oPfEeAR1ZNd5ErX3FZRHCpmXSPSxg6Y1x4HNewIAzrQq2JvaTAaGTZbmLNbbGNfYoSbBMdJTOC5z9OI_xAYIxTahv2_PUNVLKGLQj8k-_3SZNvQboabw8mY_bEUvgnctw7fqxMvyT6myOS9JpgASSfHCkrvUUbVaxTnomNFBAj_3M0bhp4eRp3HcwEISags2IsW68CDCsPGLjyQ6OPQhWXxWTkBEQEAyLIeNkDvbJKpogeDE85uQg4x5KzbCl9_ylthSIbaPyHPYQ7QAyIwt86TToqj_rdOWxpw4RM2_WVyk96x5oFOfKtIa2aIfVoMAfSi-Pkdxz6WshOk9F-Fv1ewlt83Fsd0S7DG4oP6cv7fKDMHpSqy6cVWdl7f0sMScFVjqPYXz2DFjWlVGUAmPLN76Ji-uTU8JOx9D_ThituT3mvPzE3d8bff-JBpFUyJV-HDl6n1YGoqFz7TZpho6nWTwvHgkLJ5kHykktW3KnhfbI6QSWfBU44-_qRpAk4f9FNW3lzY9l1tO2xOlAGPa7Qqg-ePqSRhdik3uWVTwa1hf5axInAJh-gW6cYwwkUNSakse2uct-OSUtlN-Hu_fRDqmy8aNaq8aatJh9aQ2L2jQDtHjFKIAAWWTeqiOlUy5JocP5EBS3JHoNqjvZ_WZry3UCSxv3VI6dWbnZL1hd02Uio4dS5sW61nQRt1yGRAhTTKZ3et8wtzRjPeUDueWUlUlc1yG5eaFk274XID_O2z8-824l2XQSLxP6Gcq42k80meYLWZYWf1s9vfuulr0oY-O_aTKlPvCJVlrjDjeSaZmsFFgzQkgrpKzoBym4NVfoYYRcTnRlDFpUDvMy21ygmpkwIwzxaf9QLEq3L1L5mscsNIbaWAYNwE0FjEbjTVmkrT9RR3YtzgdaFGzaVHFQ78hWIwyBtOtmp0lJ6ktZihwixlKkA3tOonYJRVy3fB-XZT_3tBQu9AMr9kRz1gttM_T8y_UhI9yAJ3Ifz7mFMBXerjxhUy2ObXQy7DXfRGCSECrG-DvG31SQu7PzY8mTHz9REsRSrcCwDD8eUqqxjPuzTpL83Caq8Y7e6PpsQUAzXUa5cpeT-vIAX_wNNZpqdOm3dtjGk-WMjxAMEkchVT91XuVoCi0MArFWGLiYwqVS6QMQ3UafiRAI_XQ8mowFLipXx9p9MInp8PXsnfH9Ppr8fniwrQQ9jzX8LB05sdRx8Fo3VVuEVu4th51bTJ3HORvaBAfD8cemy9c8RT2InYiDExx9z9vq7e9qBk-QQqY5Si6fYkvpI24aZ6BL765V7H63AbnsUQpXgOk0uTIUUpkxEfhGKOb6X0nVQ54D2HGm3KmnzE5jAre9PYcTYTduHFN5MZVHjUokgLK_4gQUpJkSowliUmnYBc5SIBcFJjLWjZjmLfF4ZV2ZNBBDfVfnBMimetowYE_DDYifVGbGAbbAlszL4myCSWUwDqUtB7vBp40r6-_BdGfxebRZaVRm8PUOdbAc8k2-oDH6I_yJA0J2AP7o04P2qmhjxZchpTxum3CORmydhNNrYwfuh31m93WDH-S1AMhFa-BmyqsHi9hM3mTOSblpF0nJVrhVgC_zwcgABbXgM2R0Pyg22i0K1b9OxUdWXkIXey10T8F66eY92zQEli8LsnfMcKUbmMniT8z4i2TvDCsrd1pTwkaAp1iElLSDKVwbJ5Z6iTx2wtDSc6cWMJi9-81fI1VVPJZPvz_yUtyuPVdNvyjJXUqvloMjeABrpcZtNiZnRE8e2N04gEN_0L6cEXsYkGU8xcZvFmZe43-Ycv2x02I7nw5BSTXnXrq46HZM4d6_xH_jPlJ1TAAHeSPtlj92v_4RK4DG_KsECDPsvn3sRR9ZTQ4NZLpuG4kjhO-8pR2NqMVjnabmv62pj8Y1ieaxf6cE9c77EaZ6QOslQE4eyWVL8zhLkiggogupkvqX-MQJzR79tRkml8nDGnTqRQASZPmYaI6bGbgGpy6Ab356gEsaRb74j_HvgiiB1dJvEqt_GO-UHDElw5FtuQnLimjeEpQmVpwuOdFz4jj6C1rs3p5sjYQxfh-j3CgAXtmKQ2n83skYcmHuwLwmMioSNExFZLPbEudzpsFALa1x8oN93eUsS0oT06cFQiqNRG3HV9Hv277fZLNnfzuS6oTh9h5sVcyEFjk_j1OFz03xMBq3z482mgd0mas2MHi73iqQlVSVeEnQl3mUvAw_IdUP-oKd4JjtfpSoeSIU7XG5IA0nmaTEB-67LJQ2Wbmr72jZ-mANkZHW0v_TWWtpco--0eoPvQ-g3znrofaJc6I4nRlTfkv2WH2h_eqrwFHylV9N1hMYFdRPoOsYPZimeznhAb7ZnNOmENsWc33x-VzHFDbxz4S8r-Hv3wj_w33v1AwPQgDEmCulOK3cBVl771_IXI5d-PzmHD1JyFZhG4VVMO0Ht7_xti1d4NeOEVFv_INi-ac9wGHnr_1aGVE3YYo7OsIDyvIr-op_VVCnh71b1rNW5_ke43mBXn0BEv1qDc8PCWt9FjXyB9jEBVMKJneY8-HjnesJAgYD_85eC4TQa2HJ-Ll-NzM_WC0', 'PlantUML'],
-        ['Обогащение входящих БТ', 'https://assistants-platform-dev.lab.vebtech.by/chat/7', 'Vebtech AI'],
-        ['Ревью требований', 'https://assistants-platform-dev.lab.vebtech.by/chat/6', 'Vebtech AI'],
       ] },
       { title: 'Встречи и анализ', items: [
-        ['Результаты встреч — Страхование БелВЭБ', 'https://wiki.vebtech.by/spaces/IBV/pages/325252639/%D0%A0%D0%B5%D0%B7%D1%83%D0%BB%D1%8C%D1%82%D0%B0%D1%82%D1%8B+%D0%B2%D1%81%D1%82%D1%80%D0%B5%D1%87', 'Wiki'],
-        ['Встречи КРОК MVP', 'https://wiki.belveb.by/spaces/UJBG/pages/231743920/%D0%92%D1%81%D1%82%D1%80%D0%B5%D1%87%D0%B8+%D0%9A%D0%A0%D0%9E%D0%9A_MVP', 'Wiki БелВЭБ'],
-        ['Анализ изменений протоколов', 'https://wiki.belveb.by/spaces/UJBG/pages/272994264/%D0%90%D0%BD%D0%B0%D0%BB%D0%B8%D0%B7+%D0%B8%D0%B7%D0%BC%D0%B5%D0%BD%D0%B5%D0%BD%D0%B8%D0%B9+3+%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D0%B8+%D0%BF%D1%80%D0%BE%D1%82%D0%BE%D0%BA%D0%BE%D0%BB%D0%BE%D0%B2', 'Wiki БелВЭБ'],
+        ['Результаты встреч — Страхование БелВЭБ', 'https://wiki.vebtech.by/spaces/IBV/pages/325252639/%D0%A0%D0%B5%D0%B7%D1%83%D0%BB%D1%8C%D1%82%D0%B0%D1%82%D1%8B+%D0%B2%D1%81%D1%82%D1%80%D0%B5%D1%87', 'Wiki', 'Протоколы встреч по гибкой отчётности: подтверждённые потребности, решения команды и рамки MVP — всё, о чём договорились с заказчиком.', 'insurance-meetings.webp'],
+        ['Встречи КРОК MVP', 'https://wiki.belveb.by/spaces/UJBG/pages/231743920/%D0%92%D1%81%D1%82%D1%80%D0%B5%D1%87%D0%B8+%D0%9A%D0%A0%D0%9E%D0%9A_MVP', 'Wiki БелВЭБ', 'Журнал встреч и протоколов по проекту КРОК MVP: единая лента договорённостей с заказчиком и вендорами для анализа и разработки.', 'krok-meetings.png'],
+        ['Анализ изменений протоколов', 'https://wiki.belveb.by/spaces/UJBG/pages/272994264/%D0%90%D0%BD%D0%B0%D0%BB%D0%B8%D0%B7+%D0%B8%D0%B7%D0%BC%D0%B5%D0%BD%D0%B5%D0%BD%D0%B8%D0%B9+3+%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D0%B8+%D0%BF%D1%80%D0%BE%D1%82%D0%BE%D0%BA%D0%BE%D0%BB%D0%BE%D0%B2', 'Wiki БелВЭБ', 'Артефакт анализа: сравнение версий протоколов, чтобы прозрачно видеть, что изменилось между итерациями требований.', 'protocol-changes.webp'],
       ] },
       { title: 'Требования', items: [
-        ['Use Case: проверка по списку АСОИ', 'https://wiki.belveb.by/spaces/UJBG/pages/266858564/2.2.+%D0%9F%D1%80%D0%BE%D0%B2%D0%B5%D1%80%D0%BA%D0%B0+%D0%BF%D0%BE+%D1%81%D0%BF%D0%B8%D1%81%D0%BA%D1%83+%D0%90%D0%A1%D0%9E%D0%98', 'Wiki БелВЭБ'],
-        ['Use Case: запрос на возврат', 'https://wiki.belveb.by/spaces/UJBG/pages/261948968/FR_5.2+UC_2+%D0%A4%D0%BE%D1%80%D0%BC%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5+%D0%B7%D0%B0%D0%BF%D1%80%D0%BE%D1%81%D0%B0+%D0%BD%D0%B0+%D0%B2%D0%BE%D0%B7%D0%B2%D1%80%D0%B0%D1%82', 'Wiki БелВЭБ'],
-        ['Простой путь стать ИП/ЮЛ', 'https://wiki.vebtech.by/spaces/PRESALE/pages/343584938/%D0%9F%D1%80%D0%BE%D1%81%D1%82%D0%BE%D0%B9+%D0%BF%D1%83%D1%82%D1%8C+%D1%81%D1%82%D0%B0%D1%82%D1%8C+%D0%98%D0%9F+%D0%AE%D0%9B', 'Wiki'],
+        ['Use Case: проверка по списку АСОИ', '', 'Wiki БелВЭБ'],
+        ['Use Case: запрос на возврат', 'https://wiki.belveb.by/spaces/UJBG/pages/261948968/FR_5.2+UC_2+%D0%A4%D0%BE%D1%80%D0%BC%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5+%D0%B7%D0%B0%D0%BF%D1%80%D0%BE%D1%81%D0%B0+%D0%BD%D0%B0+%D0%B2%D0%BE%D0%B7%D0%B2%D1%80%D0%B0%D1%82', 'Wiki БелВЭБ', 'Use case оформления запроса на возврат: сценарий взаимодействия пользователя и системы для согласованной реализации.', 'use-case-refund.webp'],
+        ['Простой путь стать ИП/ЮЛ', 'https://wiki.vebtech.by/spaces/PRESALE/pages/343584938/%D0%9F%D1%80%D0%BE%D1%81%D1%82%D0%BE%D0%B9+%D0%BF%D1%83%D1%82%D1%8C+%D1%81%D1%82%D0%B0%D1%82%D1%8C+%D0%98%D0%9F+%D0%AE%D0%9B', 'Wiki', 'Клиентский путь регистрации ИП и ООО в Up Online: прототип, диаграмма последовательности и экраны по шагам — от анкеты до открытия счёта.', 'ip-ul.webp'],
       ] },
       { title: 'Прототипы и презентации', items: [
         ['Прототип: переходы страниц', 'https://v0-figma-page-transition.vercel.app/', 'Vercel'],
         ['Фин рынки', 'https://v0.app/zaech1998-2559s-projects/chat/dealer-order-creation-jeMShYZCDsf', 'v0'],
         ['ГЭДК Привет!', 'https://akabanov1983-hue.github.io/verification-report-forn-prototype/', 'GitHub Pages'],
         ['AML — Панель администрирования', 'https://gorules-aml-implemen-pu99.bolt.host/', 'Bolt'],
-        ['Персональная аналитика расходов в Up Online', 'https://wiki.vebtech.by/download/attachments/343593731/v_1.2%20%D0%BF%D1%80%D0%B5%D0%B7%D0%B0%20%D0%98%D1%81%D1%81%D0%BB%D0%B5%D0%B4%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%20%D0%B2%D0%BE%D0%B7%D0%BC%D0%BE%D0%B6%D0%BD%D0%BE%D1%81%D1%82%D0%B8%20%D0%B2%D0%BD%D0%B5%D0%B4%D1%80%D0%B5%D0%BD%D0%B8%D1%8F%20%D0%BF%D0%B5%D1%80%D1%81%D0%BE%D0%BD%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%D0%B9%20%D0%B0%D0%BD%D0%B0%D0%BB%D0%B8%D1%82%D0%B8%D0%BA%D0%B8%20%D1%80%D0%B0%D1%81%D1%85%D0%BE%D0%B4%D0%BE%D0%B2%20%D0%B2%20Up%20Online.pptx?version=1&modificationDate=1791208613933&api=v2', 'PPTX'],
-        ['Результаты анализа', 'https://wiki.vebtech.by/spaces/PRESALE/pages/343581128/%D0%A0%D0%B5%D0%B7%D1%83%D0%BB%D1%8C%D1%82%D0%B0%D1%82%D1%8B+%D0%B0%D0%BD%D0%B0%D0%BB%D0%B8%D0%B7%D0%B0', 'Wiki'],
+        ['Персональная аналитика расходов в Up Online', 'https://wiki.vebtech.by/download/attachments/343593731/v_1.2%20%D0%BF%D1%80%D0%B5%D0%B7%D0%B0%20%D0%98%D1%81%D1%81%D0%BB%D0%B5%D0%B4%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%20%D0%B2%D0%BE%D0%B7%D0%BC%D0%BE%D0%B6%D0%BD%D0%BE%D1%81%D1%82%D0%B8%20%D0%B2%D0%BD%D0%B5%D0%B4%D1%80%D0%B5%D0%BD%D0%B8%D1%8F%20%D0%BF%D0%B5%D1%80%D1%81%D0%BE%D0%BD%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%D0%B9%20%D0%B0%D0%BD%D0%B0%D0%BB%D0%B8%D1%82%D0%B8%D0%BA%D0%B8%20%D1%80%D0%B0%D1%81%D1%85%D0%BE%D0%B4%D0%BE%D0%B2%20%D0%B2%20Up%20Online.pptx?version=1&modificationDate=1791208613933&api=v2', 'PPTX', 'Презентация исследования возможности персональной аналитики расходов в Up Online: обоснование гипотезы и направления решения.', 'up-online-analytics.webp'],
+        ['Результаты анализа', 'https://wiki.vebtech.by/spaces/PRESALE/pages/343581128/%D0%A0%D0%B5%D0%B7%D1%83%D0%BB%D1%8C%D1%82%D0%B0%D1%82%D1%8B+%D0%B0%D0%BD%D0%B0%D0%BB%D0%B8%D0%B7%D0%B0', 'Wiki', 'Результаты анализа автоматизации регистрации ЮЛ: история решений, проверка интеграций и оценка, ссылки на прототипы клиентского пути.', 'analysis-results.webp'],
       ] },
     ],
     process: [
@@ -237,9 +234,9 @@ const DEV_ROWS = {
   backend: {
     links: [
       { title: 'Инструменты', items: [
-        ['AssessmentHub', 'https://assessment-hub.vebtech.pro/', 'Vebtech'],
-        ['VebTech Codex Max', 'https://wiki.vebtech.by/x/O7h6F', 'Wiki'],
-        ['Tech Radar', 'https://dev-app-tech-radar.lab.vebtech.by/', 'Vebtech'],
+        ['AssessmentHub', '', 'Vebtech'],
+        ['VebTech Codex Max', 'https://wiki.vebtech.by/x/O7h6F', 'Wiki', 'VebTech Codex Max — агентская среда разработки с памятью проекта, навыками (skills) и доступом к корпоративной LLM.', 'codex-max.webp'],
+        ['Tech Radar', 'https://dev-app-tech-radar.lab.vebtech.by/', 'Vebtech', 'Технологический радар компании: какие технологии в статусах adopt / trial / assess / hold — единая ориентация для команд и онбординга.', 'tech-radar.webp'],
       ] },
     ],
     process: [
@@ -264,15 +261,15 @@ const DEV_ROWS = {
   frontend: {
     links: [
       { title: 'Шаблон и конфигурации', items: [
-        ['Шаблон React-приложения: PWA, TWA, RU/EN', 'https://vt-gitlab-new.lab.vebtech.by/develop-frontend/react-project-template', 'GitLab'],
-        ['Общие конфигурации frontend-configs', 'https://vt-gitlab-new.lab.vebtech.by/develop-frontend/frontend-configs', 'GitLab'],
+        ['Шаблон React-приложения: PWA, TWA, RU/EN', '', 'GitLab'],
+        ['Общие конфигурации frontend-configs', '', 'GitLab'],
       ] },
       { title: 'Дизайн-система Solar UI', items: [
-        ['Сайт дизайн-системы', 'https://solar-ui-2.lab.vebtech.by/', 'Vebtech'],
-        ['Репозиторий', 'https://vt-gitlab-new.lab.vebtech.by/develop-frontend/solar-ui-2', 'GitLab'],
+        ['Сайт дизайн-системы', '', 'Vebtech'],
+        ['Репозиторий', '', 'GitLab'],
       ] },
       { title: 'Качество', items: [
-        ['Quality Gates & Code Style', 'https://wiki.vebtech.by/spaces/Learn/pages/255824494/Quality+gates?preview=/255824494/255824545/Quality%20Gates%20%26%20Code%20Style.pdf', 'Wiki'],
+        ['Quality Gates & Code Style', 'https://wiki.vebtech.by/spaces/Learn/pages/255824494/Quality+gates?preview=/255824494/255824545/Quality%20Gates%20%26%20Code%20Style.pdf', 'Wiki', 'Стандарты Quality Gates и code style: правила качества кода, встроенные в CI/CD, которые снижают число сюрпризов на тестировании.', 'quality-gates.webp'],
       ] },
     ],
     process: [
@@ -298,14 +295,14 @@ const DEV_ROWS = {
   qa: {
     links: [
       { title: 'Инструменты', items: [
-        ['QA Hub', 'https://qa-hub.vebtech.by/', 'Vebtech'],
-        ['ReportPortal', 'https://dev-reportportal.lab.vebtech.by/ui/', 'Vebtech'],
-        ['AI-ассистент vebtech', 'https://assistants-platform-dev.lab.vebtech.by/', 'Vebtech AI'],
+        ['QA Hub', 'https://qa-hub.vebtech.by/', 'Vebtech', 'QA Hub — пространство QA Vebtech: материалы, практики и инструменты тестирования для команд в одном месте.', 'qa-hub.webp'],
+        ['ReportPortal', '', 'Vebtech'],
+        ['AI-ассистент vebtech', 'https://assistants-platform-dev.lab.vebtech.by/', 'Vebtech AI', 'Внутренняя платформа AI-ассистентов: чаты и боты под задачи проектов (требования, BPMN/UML, ревью, обогащение БТ и др.).', 'assistants-platform.webp'],
       ] },
       { title: 'Примеры', items: [
-        ['Test execution в Xray', 'https://jira.belveb.by/browse/SDBOFLAG-22960', 'Jira БелВЭБ'],
-        ['Feature test exit report', 'https://wiki.belveb.by/x/-3VcE', 'Wiki БелВЭБ'],
-        ['Release test exit report', 'https://wiki.belveb.by/x/amhcE', 'Wiki БелВЭБ'],
+        ['Test execution в Xray', '', 'Jira БелВЭБ'],
+        ['Feature test exit report', '', 'Wiki БелВЭБ'],
+        ['Release test exit report', '', 'Wiki БелВЭБ'],
       ] },
     ],
     process: [
@@ -339,10 +336,10 @@ const DEV_ROWS = {
 const MONITORING_ROWS = {
   links: [
     { title: 'Дашборды Grafana', items: [
-      ['Observability: метрики, логи и трейсы в одном окне', 'https://vt-mon-grafana.lab.vebtech.by/d/26d4c30b-dd1c-49db-8f5f-c9a6447bba1e/simple-clickhouse-otel-dashboard-dev?orgId=1&from=now-30m&to=now&timezone=Europe%2FMoscow&var-datasource=dfak3urqkerr4f&var-serviceName=$__all&var-trace_id=$__all', 'Grafana'],
-      ['Стенд нагрузочного тестирования', 'https://vt-mon-grafana.lab.vebtech.by/d/bf3a7q2uehfr4f/apache-jmeter-dashboard-aml?var-interval=1m&orgId=1&from=2025-11-14T02:11:11.276Z&to=2025-11-14T11:42:33.152Z&timezone=browser&var-data_source=cf3a523h6hurka&var-application=AML&var-transaction=Transaction%20-%20AML%20Search', 'Grafana'],
-      ['Бизнес-метрики кредитной платформы', 'https://vt-mon-grafana.lab.vebtech.by/d/efolgnl2pa9kwc/biznes-panel--kreditnaja-platforma?orgId=1&from=now-12h&to=now&timezone=browser&var-Env=hbHg1g1Vk&var-job=cmp-qa&var-status_ru=$__all&var-product_ru=$__all', 'Grafana'],
-      ['Сервис с AI-подсказками: что значит и как реагировать', 'https://vt-mon-grafana.lab.vebtech.by/d/fg238mpw99p1cs/jvm-micrometer-erip?orgId=1&from=now-15m&to=now&timezone=browser&var-Env=hbHg1g1Vk&var-namespace=belvebapp-lte&var-application=belvebapp-erip&var-instance=$__all&var-jvm_memory_pool_heap=$__all&var-jvm_memory_pool_nonheap=$__all&var-jvm_buffer_pool=$__all&refresh=30s', 'Grafana'],
+      ['Observability: метрики, логи и трейсы в одном окне', 'https://vt-mon-grafana.lab.vebtech.by/d/26d4c30b-dd1c-49db-8f5f-c9a6447bba1e/simple-clickhouse-otel-dashboard-dev?orgId=1&from=now-30m&to=now&timezone=Europe%2FMoscow&var-datasource=dfak3urqkerr4f&var-serviceName=$__all&var-trace_id=$__all', 'Grafana', 'Дашборд observability: метрики, логи и трейсы вместе — быстрее находить причину сбоя и понимать поведение сервиса в эксплуатации.', 'observability.webp'],
+      ['Стенд нагрузочного тестирования', '', 'Grafana'],
+      ['Бизнес-метрики кредитной платформы', '', 'Grafana'],
+      ['Сервис с AI-подсказками: что значит и как реагировать', '', 'Grafana'],
     ] },
   ],
   process: [

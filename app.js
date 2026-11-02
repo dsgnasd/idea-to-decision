@@ -3,7 +3,7 @@ const $ = (id) => document.getElementById(id);
 const $$ = (sel) => [...document.querySelectorAll(sel)];
 const ph = (value, hint) => value || `<span class="ph">${hint}</span>`;
 
-const state = { cover: false, stage: -1, role: 0, lens: 'people', modal: false };
+const state = { cover: false, stage: -1, role: 0, lens: 'people', modal: false, art: false };
 
 /* ---------- motion ---------- */
 
@@ -259,6 +259,32 @@ function setModal(open) {
   }
 }
 
+// Artifact card for an internal link: name, description, the link itself and a screenshot (placeholder until the file exists).
+// Item: [name, url, host, description, screenshot?] — screenshot is a file name in assets/artifacts/
+function setArtifact(i) {
+  const m = $('art');
+  if (i == null) {
+    if (!state.art) return;
+    state.art = false;
+    leave([m], { y: 0 }).then(() => { if (!state.art) { m.hidden = true; clearStale(); } });
+    return;
+  }
+  const [name, url, host, value = '', shot] = shownLinks[i];
+  let shown = url;
+  try { shown = decodeURI(url); } catch {} // wiki addresses are percent-encoded; show them readable
+  $('art-title').textContent = name;
+  $('art-text').innerHTML = `
+    <p class="art-value">${value}</p>
+    <p class="art-label">Ссылка · ${host}</p>
+    <a class="art-url" href="${url}" target="_blank" rel="noopener">${shown}</a>
+    <p class="art-note">${LOCK}Открывается только во внутренней сети Vebtech</p>`;
+  $('art-shot').innerHTML = shot ? `<img src="assets/artifacts/${shot}" alt="Скриншот: ${name}">` : '<span>Скриншот</span>';
+  state.art = true;
+  m.hidden = false;
+  enter([m], { y: 0, duration: 300 });
+  enter([m.firstElementChild], { y: 24, delay: 60 });
+}
+
 // Matrix: every step of the stage side by side — a column per step: Было (muted) → Стало (blue)
 function renderMatrix(stage) {
   $('role-title').textContent = stage.matrix;
@@ -277,16 +303,27 @@ function renderMatrix(stage) {
     </div>`;
 }
 
-// Artifacts: a column per group, each link a row «name · host ↗», opens in a new tab
+// Corporate-network resources don't open for outside viewers: they get a lock and open a card in the deck instead
+const INTERNAL = /^https?:\/\/([^/]*\.)?(vebtech\.by|belveb\.by|vebtech\.pro|myteam\.mail\.ru)(\/|$)/;
+const LOCK = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
+let shownLinks = []; // items of the open «Артефакты» tab, looked up by the card
+
+// Artifacts: a column per group, each link a row «name · host ↗», opens in a new tab (internal ones: «name · host · внутренний ресурс 🔒», open the card;
+// items without url are plain info tiles)
 function renderLinks(title, groups) {
   $('role-title').innerHTML = title;
   $('lead').innerHTML = '';
   // Column width follows the group size; a single group spreads its links across the panel
   $('shifts').style.gridTemplateColumns = groups.map((g) => (g.items.length > 4 ? '2fr' : '1fr')).join(' ');
+  shownLinks = groups.flatMap((g) => g.items);
   $('shifts').innerHTML = groups.map((g) => `
     <div class="links-group t-item${groups.length === 1 ? ' wide' : g.items.length > 4 ? ' two' : ''}">
       <h4>${g.title}</h4>
-      <div>${g.items.map(([name, url, host]) => `<a class="link" href="${url}" target="_blank" rel="noopener"><span>${name}<small>${host}</small></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>`).join('')}</div>
+      <div>${g.items.map(([name, url, host], i) => !url
+        ? `<div class="link info"><span>${name}<small>${host} · внутренний ресурс</small></span></div>` // no address to share: name only
+        : INTERNAL.test(url)
+        ? `<button class="link internal" data-art="${shownLinks.indexOf(g.items[i])}"><span>${name}<small>${host} · внутренний ресурс</small></span>${LOCK}</button>`
+        : `<a class="link" href="${url}" target="_blank" rel="noopener"><span>${name}<small>${host}</small></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>`).join('')}</div>
     </div>`).join('');
 }
 
@@ -443,10 +480,13 @@ function goStage(i) {
 
 document.addEventListener('click', (e) => {
   if (state.modal && e.target === $('more')) return setModal(false); // click on the backdrop
-  const el = e.target.closest('[data-step],[data-cover],[data-stage],[data-role],[data-lens],[data-more],[data-close],[data-fullscreen]');
+  if (state.art && e.target === $('art')) return setArtifact(null);
+  const el = e.target.closest('[data-step],[data-cover],[data-stage],[data-role],[data-lens],[data-more],[data-close],[data-fullscreen],[data-art],[data-art-close]');
   if (!el) return;
   el.blur(); // keep focus off buttons so clicker Space/Enter steps the deck instead of re-clicking
   if ('fullscreen' in el.dataset) return toggleFullscreen();
+  if ('art' in el.dataset) return setArtifact(+el.dataset.art);
+  if ('artClose' in el.dataset) return setArtifact(null);
   if ('more' in el.dataset) return setModal(true);
   if ('close' in el.dataset) return setModal(false);
   if (el.dataset.step) return step(+el.dataset.step);
@@ -491,6 +531,7 @@ const PREV = ['ArrowLeft', 'ArrowUp', 'PageUp', 'Backspace'];
 document.addEventListener('keydown', (e) => {
   if (e.metaKey || e.ctrlKey || e.altKey) return;
   if (e.key === 'Escape' && state.modal) return setModal(false);
+  if (state.art && (e.key === 'Escape' || NEXT.includes(e.key) || PREV.includes(e.key))) { e.preventDefault(); return setArtifact(null); } // the card closes before the deck moves on
   if (e.code === 'KeyF' && !e.repeat) return toggleFullscreen(); // by key position: works in the Russian layout too (А)
   if (e.target.closest?.('a') && e.key === 'Enter') return; // Enter on a focused link opens it
   const delta = NEXT.includes(e.key) ? 1 : PREV.includes(e.key) ? -1 : 0;
